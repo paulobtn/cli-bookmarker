@@ -57,3 +57,4 @@ bm -o
 * tags system, will be useful for playlists or tools like print all websites with tag X
 * import favorites from browser
 * feature to open urls directly, not necessarily using the id
+* html page

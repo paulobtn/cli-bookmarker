@@ -1,5 +1,7 @@
 #!/bin/sh
 
+function join_by { local d=${1-} f=${2-}; if shift 2; then printf %s "$f" "${@/#/$d}"; fi; }
+
 # will load from a configuration file, but for now it just takes the 
 # default browser that should be exported in .profile or .bash_profile
 
@@ -11,6 +13,8 @@ case $1 in
         DESCRIPTION=""
         if [[ $3 = "-d" ]]; then
             DESCRIPTION=$4
+        else 
+            DESCRIPTION=$3
         fi
         echo $2 $DESCRIPTION >> bookmarks
         ;;
@@ -19,8 +23,21 @@ case $1 in
         cat -n bookmarks
         ;;
     "-r") 
-        #remove bookmark
-        sed -i.bak "$2d" ./bookmarks
+        #remove bookmark if id is provided
+        if [ ! -z "$2" ]; then        
+            # add lines that will be deleted to an array
+            arr=()
+            while (( "$#-1" )); do
+                arr+=($2d)
+                shift 
+            done
+
+            #delete the lines           
+            sed -i.bak `join_by ";" $(printf '%s\n' "${arr[*]}")` ./bookmarks 
+
+        else
+            echo "you need to provide an id"
+        fi
         ;;
     "-o"|""|"-s") 
         #open bookmark
