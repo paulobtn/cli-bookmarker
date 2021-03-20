@@ -7,7 +7,6 @@ bm [url] [description]? [tag]?
 bm [option]
 bm [option] [tag]
 bm [option] [id...]
-bm [option] [url]
 ```
 
 ## Tools Required
