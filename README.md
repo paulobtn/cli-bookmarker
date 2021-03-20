@@ -9,6 +9,10 @@ bm [option] [url]
 bm [option] [url] -d [description] 
 ```
 
+## Tools Required
+* fzf
+* core utils like cat, sed, awk, echo...
+
 ## Options
 ```
 -a, write a bookmark in the bookmark file
