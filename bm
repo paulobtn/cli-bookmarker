@@ -41,7 +41,10 @@ case $1 in
             arr=(`cat -n ./bookmarks | fzf -m | awk '{print $1"d"}' | xargs echo`)
         fi
         #delete the lines
-        sed -i.bak `join_by ";" $(printf '%s\n' "${arr[*]}")` ./bookmarks 
+        if [ ${#arr[@]} -ne "0" ]; then
+            sed -i.bak `join_by ";" $(printf '%s\n' "${arr[*]}")` ./bookmarks 
+        fi
+        
         ;;
     "-o"|""|"-s") 
         #open bookmark
