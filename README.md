@@ -4,7 +4,7 @@ A very simple cli bookmarker made with shell script (still in development)
 ## Usage
 ```
 bm [option]
-bm [option] [id]
+bm [option] [id...]
 bm [option] [url]
 bm [option] [url] -d [description] 
 ```
