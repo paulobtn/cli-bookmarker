@@ -3,10 +3,10 @@ A very simple cli bookmarker made with shell script (still in development)
 
 ## Usage
 ```
+bm [url] [description]
 bm [option]
 bm [option] [id...]
 bm [option] [url]
-bm [option] [url] -d [description] 
 ```
 
 ## Tools Required
@@ -26,11 +26,11 @@ bm [option] [url] -d [description]
 
 add a bookmark
 ```
-bm -a https://www.github.com
+bm https://www.github.com
 ```
 Add a bookmark with a description
 ```
-bm -a https:/www.example.com -d "an example website"
+bm https:/www.example.com "an example website"
 ```
 list all
 ```

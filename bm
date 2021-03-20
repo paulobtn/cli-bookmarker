@@ -9,16 +9,6 @@ BM_LAUNCHER=${BROWSER}
 BM_EDITOR=${EDITOR}
 
 case $1 in
-    "-a") 
-        #add bookmark
-        DESCRIPTION=""
-        if [[ $3 = "-d" ]]; then
-            DESCRIPTION=$4
-        else 
-            DESCRIPTION=$3
-        fi
-        echo $2 $DESCRIPTION >> bookmarks
-        ;;
     "-l") 
         #list bookmarks
         cat -n bookmarks
@@ -27,15 +17,11 @@ case $1 in
         arr=()
         #remove bookmark if id is provided
         if [ ! -z "$2" ]; then        
-            # add lines that will be deleted to an array
-            
+            # add lines that will be deleted to an array           
             while (( "$#-1" )); do
                 arr+=($2d)
                 shift 
             done
-
-            #delete the lines           
-
         else
             # user can select multiple entries. This returns the ids list that will be used by sed, example: [3d 5d 7d]
             arr=(`cat -n ./bookmarks | fzf -m | awk '{print $1"d"}' | xargs echo`)
@@ -66,7 +52,11 @@ case $1 in
         ${BM_EDITOR} ./bookmarks 
         ;;        
     *)
-        echo "invalid option";;
+        if [[ ${1:0:1} == "-" ]]; then
+            echo "invalid command"
+        else
+            #bm [url] [description]? [tags]? should add a bookmark
+            echo $1 $2 >> bookmarks
+        fi
+        ;;
 esac
-
-
