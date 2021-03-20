@@ -4,7 +4,6 @@ function join_by { local d=${1-} f=${2-}; if shift 2; then printf %s "$f" "${@/#
 
 # will load from a configuration file, but for now it just takes the 
 # default browser that should be exported in .profile or .bash_profile
-# bug do remove
 
 BM_LAUNCHER=${BROWSER}
 BM_EDITOR=${EDITOR}
@@ -44,9 +43,7 @@ case $1 in
         if [ -z "$2" ]; then 
             # id not provided, open search prompt
             LINE=`cat -n ./bookmarks | fzf`
-            
-          
-            
+                    
             echo $LINE
             if [ ! -z "$LINE" ]; then 
                 # open the selected url
