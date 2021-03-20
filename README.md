@@ -35,9 +35,9 @@ list all
 ```
 bm -l
 ```
-remove the third entry
+remove the third and fourth entry
 ```
-bm -r 3
+bm -r 3 4
 ```
 open the second entry
 ```
