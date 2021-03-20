@@ -1,0 +1,44 @@
+#!/bin/sh
+
+# will load from a configuration file, but for now it just takes the 
+# default browser that should be exported in .profile or .bash_profile
+
+LAUNCHER=${BROWSER}
+
+case $1 in
+    "-a") 
+        #add bookmark
+        DESCRIPTION=""
+        if [[ $3 = "-d" ]]; then
+            DESCRIPTION=$4
+        fi
+        echo $2 $DESCRIPTION >> bookmarks
+        ;;
+    "-l") 
+        #list bookmarks
+        cat -n bookmarks
+        ;;
+    "-r") 
+        #remove bookmark
+        sed -i.bak "$2d" ./bookmarks
+        ;;
+    "-o"|""|"-s") 
+        #open bookmark
+        if [ -z "$2" ]; then 
+            # id not provided, open search prompt
+            LINE=`cat ./bookmarks | fzf`
+            echo $LINE
+            if [ ! -z "$LINE" ]; then 
+                # open the selected url
+                $LAUNCHER `echo $LINE | awk '{print $1}'`
+            fi
+        else
+            #id is provided, open url
+            $LAUNCHER `sed -n $2p ./bookmarks | awk '{print $1}'`;
+        fi
+        ;;        
+    *)
+        echo "invalid option";;
+esac
+
+
