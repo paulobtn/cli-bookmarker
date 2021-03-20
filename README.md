@@ -40,6 +40,10 @@ remove the third and fourth entry
 ```
 bm -r 3 4
 ```
+search the entries you want to remove. You can select multiple entries with tab
+```
+bm -r
+```
 open the second entry
 ```
 bm -o 2
@@ -57,7 +61,6 @@ bm -e
 
 * Debugging more use cases
 * Create a configuration file where the user will be able to change the launchers and the bookmark file
-* exclude multiple entries using fzf
 * open with xdg-open by default
 * tags system, will be useful for playlists or tools like print all websites with tag X
 * import favorites from browser

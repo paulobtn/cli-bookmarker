@@ -24,22 +24,24 @@ case $1 in
         cat -n bookmarks
         ;;
     "-r") 
+        arr=()
         #remove bookmark if id is provided
         if [ ! -z "$2" ]; then        
             # add lines that will be deleted to an array
-            arr=()
+            
             while (( "$#-1" )); do
                 arr+=($2d)
                 shift 
             done
 
             #delete the lines           
-            sed -i.bak `join_by ";" $(printf '%s\n' "${arr[*]}")` ./bookmarks 
 
         else
-            echo "you need to provide an id"
-            # cat -n ./bookmarks | fzf
+            # user can select multiple entries. This returns the ids list that will be used by sed, example: [3d 5d 7d]
+            arr=(`cat -n ./bookmarks | fzf -m | awk '{print $1"d"}' | xargs echo`)
         fi
+        #delete the lines
+        sed -i.bak `join_by ";" $(printf '%s\n' "${arr[*]}")` ./bookmarks 
         ;;
     "-o"|""|"-s") 
         #open bookmark
