@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# a string join function
 function join_by { local d=${1-} f=${2-}; if shift 2; then printf %s "$f" "${@/#/$d}"; fi; }
 
 # will load from a configuration file, but for now it just takes the 
@@ -7,16 +8,17 @@ function join_by { local d=${1-} f=${2-}; if shift 2; then printf %s "$f" "${@/#
 
 BM_LAUNCHER=${BROWSER}
 BM_EDITOR=${EDITOR}
+BM_DB="./bookmarks"
 
 case $1 in
     "-l") 
         #list bookmarks
         if [ -z "$2" ]; then 
             # no tag was given: list all
-            cat -n bookmarks
+            cat -n ${BM_DB}
         else
             # tag was given: list only entries that match
-            cat -n bookmarks | grep "\[*$2"
+            cat -n ${BM_DB} | grep "\[*$2"
         fi   
         ;;
     "-r") 
@@ -69,7 +71,7 @@ case $1 in
         ;;
     "-e")
         #edit with text editor
-        ${BM_EDITOR} ./bookmarks 
+        ${BM_EDITOR} ${BM_DB}
         ;;        
     *)
         if [[ ${1:0:1} == "-" ]]; then
@@ -83,7 +85,7 @@ case $1 in
 
             # check if there's description
             if [ ! -z "$2" ]; then
-                DESCR="-- $2"
+                DESCR="$2"
                 #check if there's tags
                 if [ ! -z "$3" ]; then 
                     while (( "$#" )); do
@@ -94,7 +96,8 @@ case $1 in
                 fi   
 
             fi
-            echo $SITE $DESCR $TAGSSTR >> bookmarks        
+            # echo $SITE $DESCR $TAGSSTR >> bookmarks        
+            echo -e "$SITE\t$DESCR\t$TAGSSTR" >> ${BM_DB}        
         fi
         ;;
 esac
