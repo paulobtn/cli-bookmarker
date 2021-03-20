@@ -4,6 +4,9 @@ function join_by { local d=${1-} f=${2-}; if shift 2; then printf %s "$f" "${@/#
 
 # will load from a configuration file, but for now it just takes the 
 # default browser that should be exported in .profile or .bash_profile
+# bug do remove
+
+#./bm -l | grep -oP '\[\K[^]]+' pega as tags
 
 BM_LAUNCHER=${BROWSER}
 BM_EDITOR=${EDITOR}
@@ -11,24 +14,30 @@ BM_EDITOR=${EDITOR}
 case $1 in
     "-l") 
         #list bookmarks
-        cat -n bookmarks
+        if [ -z "$2" ]; then 
+            # no tag was given: list all
+            cat -n bookmarks
+        else
+            # tag was given: list only entries that match
+            cat -n bookmarks | grep "\[*$2"
+        fi   
         ;;
     "-r") 
-        arr=()
+        ARR=()
         #remove bookmark if id is provided
         if [ ! -z "$2" ]; then        
             # add lines that will be deleted to an array           
             while (( "$#-1" )); do
-                arr+=($2d)
+                ARR+=($2d)
                 shift 
             done
         else
             # user can select multiple entries. This returns the ids list that will be used by sed, example: [3d 5d 7d]
-            arr=(`cat -n ./bookmarks | fzf -m | awk '{print $1"d"}' | xargs echo`)
+            ARR=(`cat -n ./bookmarks | fzf -m | awk '{print $1"d"}' | xargs echo`)
         fi
         #delete the lines
-        if [ ${#arr[@]} -ne "0" ]; then
-            sed -i.bak `join_by ";" $(printf '%s\n' "${arr[*]}")` ./bookmarks 
+        if [ ${#ARR[@]} -ne "0" ]; then
+            sed -i.bak `join_by ";" $(printf '%s\n' "${ARR[*]}")` ./bookmarks 
         fi
         
         ;;
@@ -56,7 +65,25 @@ case $1 in
             echo "invalid command"
         else
             #bm [url] [description]? [tags]? should add a bookmark
-            echo $1 $2 >> bookmarks
+            SITE=$1
+            TAGS=()
+            TAGSSTR=""
+            DESCR=""
+
+            # check if there's description
+            if [ ! -z "$2" ]; then
+                DESCR="-- $2"
+                #check if there's tags
+                if [ ! -z "$3" ]; then 
+                    while (( "$#" )); do
+                        TAGS+=($3)
+                        shift 
+                    done
+                    TAGSSTR=`printf '[%s] ' "${TAGS[*]}"`
+                fi   
+
+            fi
+            echo $SITE $DESCR $TAGSSTR >> bookmarks        
         fi
         ;;
 esac

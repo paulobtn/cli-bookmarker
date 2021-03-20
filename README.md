@@ -60,9 +60,9 @@ bm -e
 ## TODO features
 
 * Debugging more use cases
-* Create a configuration file where the user will be able to change the launchers and the bookmark file
+* Create a configuration file where the user will be able to change the launchers, the bookmark file and the default editor
 * open with xdg-open by default
 * tags system, will be useful for playlists or tools like print all websites with tag X
 * import favorites from browser
 * feature to open urls directly, not necessarily using the id
-* html page
+* html page with tag filtering
