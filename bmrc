@@ -1,1 +1,10 @@
+[general]
+bmfile /home/link/bm
+editor nvim
+browser librewolf
 
+[urls]
+youtube.com librewolf
+youtube.com/watch mpv
+google.com brave
+gemini:// amfora
