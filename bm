@@ -7,8 +7,6 @@ BM_LAUNCHER=${BROWSER}
 BM_EDITOR=${EDITOR}
 BM_DB="./bookmarks"
 
-
-
 CONFIG_FILE="./bmrc"
 if test -f "$CONFIG_FILE"; then
     GENERAL=()
@@ -39,6 +37,27 @@ if test -f "$CONFIG_FILE"; then
             esac
         fi       
     done < $CONFIG_FILE
+
+    # assign config defaults
+    for i in "${GENERAL[@]}"
+    do
+        gc=`echo $i | awk '{print $1}'`
+        gs=`echo $i | awk '{print $2}'`
+        case $gc in
+            "bmfile")
+                BM_DB=$gs
+            ;;
+            "editor")
+                BM_EDITOR=$gs
+            ;;
+            "browser")
+                BM_LAUNCHER=$gs
+            ;;
+            *)
+                echo "invalid configuration"
+            ;;
+        esac
+    done;
 
     # printf '%s\n' "${GENERAL[@]}"
     # printf '%s\n' "${URLS[@]}"

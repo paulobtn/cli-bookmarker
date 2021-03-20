@@ -1,7 +1,7 @@
 [general]
-bmfile /home/link/bm
-editor nvim
-browser librewolf
+bmfile ./bookmarks
+editor vim
+browser brave
 
 [urls]
 youtube.com librewolf
