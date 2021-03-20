@@ -35,7 +35,6 @@ if test -f "$CONFIG_FILE"; then
                     fi
                 ;;
                 *)
-                    echo "none"
                 ;;
             esac
         fi       
@@ -47,7 +46,6 @@ if test -f "$CONFIG_FILE"; then
 else
     echo "Config file not found"
 fi
-
 
 
 case $1 in
