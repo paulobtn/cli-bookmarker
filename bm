@@ -3,12 +3,52 @@
 # a string join function
 function join_by { local d=${1-} f=${2-}; if shift 2; then printf %s "$f" "${@/#/$d}"; fi; }
 
-# will load from a configuration file, but for now it just takes the 
-# default browser that should be exported in .profile or .bash_profile
-
 BM_LAUNCHER=${BROWSER}
 BM_EDITOR=${EDITOR}
 BM_DB="./bookmarks"
+
+
+
+CONFIG_FILE="./bmrc"
+if test -f "$CONFIG_FILE"; then
+    GENERAL=()
+    URLS=()
+    CURR="none";
+
+    while IFS= read -r line
+    do  
+        if [ "$line" = "[general]" ]; then
+            CURR="general"
+        elif [ "$line" = "[urls]" ]; then
+            CURR="urls"
+        else
+            # echo $CURR
+            case $CURR in
+                "general")
+                    if [ ! -z "$line" ]; then
+                        GENERAL+=("$line")
+                    fi
+                ;;
+                "urls")
+                    if [ ! -z "$line" ]; then
+                        URLS+=("$line")
+                    fi
+                ;;
+                *)
+                    echo "none"
+                ;;
+            esac
+        fi       
+    done < $CONFIG_FILE
+
+    # printf '%s\n' "${GENERAL[@]}"
+    # printf '%s\n' "${URLS[@]}"
+
+else
+    echo "Config file not found"
+fi
+
+
 
 case $1 in
     "-l") 
