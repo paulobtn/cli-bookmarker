@@ -6,8 +6,6 @@ function join_by { local d=${1-} f=${2-}; if shift 2; then printf %s "$f" "${@/#
 # default browser that should be exported in .profile or .bash_profile
 # bug do remove
 
-#./bm -l | grep -oP '\[\K[^]]+' pega as tags
-
 BM_LAUNCHER=${BROWSER}
 BM_EDITOR=${EDITOR}
 
@@ -46,6 +44,9 @@ case $1 in
         if [ -z "$2" ]; then 
             # id not provided, open search prompt
             LINE=`cat -n ./bookmarks | fzf`
+            
+          
+            
             echo $LINE
             if [ ! -z "$LINE" ]; then 
                 # open the selected url
@@ -54,6 +55,19 @@ case $1 in
         else
             #id is provided, open url
             $BM_LAUNCHER `sed -n $2p ./bookmarks | awk '{print $1}'`;
+        fi
+        ;;
+    "-t")
+        # open with tag search
+        if [ ! -z "$2" ]; then 
+            LINE=`cat -n bookmarks | grep "\[*$2" | fzf`
+
+            if [ ! -z "$LINE" ]; then 
+                # open the selected url
+                $BM_LAUNCHER `echo $LINE | awk '{print $2}'`
+            fi
+        else
+            echo "must have a tag as input"
         fi
         ;;
     "-e")
