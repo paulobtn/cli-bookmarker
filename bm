@@ -5,8 +5,8 @@ function join_by { local d=${1-} f=${2-}; if shift 2; then printf %s "$f" "${@/#
 # will load from a configuration file, but for now it just takes the 
 # default browser that should be exported in .profile or .bash_profile
 
-LAUNCHER=${BROWSER}
-EDITOR_SOFTWARE=${EDITOR}
+BM_LAUNCHER=${BROWSER}
+BM_EDITOR=${EDITOR}
 
 case $1 in
     "-a") 
@@ -38,26 +38,27 @@ case $1 in
 
         else
             echo "you need to provide an id"
+            # cat -n ./bookmarks | fzf
         fi
         ;;
     "-o"|""|"-s") 
         #open bookmark
         if [ -z "$2" ]; then 
             # id not provided, open search prompt
-            LINE=`cat ./bookmarks | fzf`
+            LINE=`cat -n ./bookmarks | fzf`
             echo $LINE
             if [ ! -z "$LINE" ]; then 
                 # open the selected url
-                $LAUNCHER `echo $LINE | awk '{print $1}'`
+                $BM_LAUNCHER `echo $LINE | awk '{print $2}'`
             fi
         else
             #id is provided, open url
-            $LAUNCHER `sed -n $2p ./bookmarks | awk '{print $1}'`;
+            $BM_LAUNCHER `sed -n $2p ./bookmarks | awk '{print $1}'`;
         fi
         ;;
     "-e")
         #edit with text editor
-        ${EDITOR_SOFTWARE} ./bookmarks 
+        ${BM_EDITOR} ./bookmarks 
         ;;        
     *)
         echo "invalid option";;
