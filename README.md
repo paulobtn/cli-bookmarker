@@ -19,6 +19,7 @@ bm [option] [url] -d [description]
 -l, list all the bookmarks
 -r, remove bookmark with the specified id, or search with fzf it not
 -o, -s, open bookmark if id is specified, search with fzf if not 
+-e, edit with default text editor
 ```
 
 ## Examples
@@ -46,6 +47,10 @@ bm -o 2
 fzf search before launching
 ```
 bm -o
+```
+edit with default text editor
+```
+bm -e
 ```
 
 ## TODO features

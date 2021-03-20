@@ -6,6 +6,7 @@ function join_by { local d=${1-} f=${2-}; if shift 2; then printf %s "$f" "${@/#
 # default browser that should be exported in .profile or .bash_profile
 
 LAUNCHER=${BROWSER}
+EDITOR_SOFTWARE=${EDITOR}
 
 case $1 in
     "-a") 
@@ -53,6 +54,10 @@ case $1 in
             #id is provided, open url
             $LAUNCHER `sed -n $2p ./bookmarks | awk '{print $1}'`;
         fi
+        ;;
+    "-e")
+        #edit with text editor
+        ${EDITOR_SOFTWARE} ./bookmarks 
         ;;        
     *)
         echo "invalid option";;
