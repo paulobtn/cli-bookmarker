@@ -1,9 +1,9 @@
 #!/bin/sh
 
 # Defaults settings
-
-BM_LAUNCHER=${BROWSER} #browser that launches the URLs
-BM_EDITOR=${EDITOR} # browser editor used with bm -e
+# BM_LAUNCHER=${BROWSER} #browser that launches the URLs
+BM_LAUNCHER=xdg-open #default application to launch URLs
+BM_EDITOR=${EDITOR} # change editor used with bm -e
 BM_DB="$HOME/bookmarks" # where the bookmarks are stored
 CONFIG_FILE="$HOME/.config/cli-bookmarker/bmrc"
 
@@ -17,7 +17,7 @@ function trim(){
     sed -e 's/^[[:space:]]*//'
 }
 
-# beautiful print of bookmark file
+# beautiful print of bookmarks file
 function bm_print(){ 
     local f=$1
     # cat -n $f | awk '{ $3 = "\t" $3; print}' | column -t -s $'\t' 

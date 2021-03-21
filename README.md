@@ -11,6 +11,46 @@ bm [option] [id...]
 bm [option] [url]
 ```
 
+## Configuration
+
+By default, cli-bookmarker will look for the configuration file:
+```
+%HOME/.config/cli-bookmarker/bmrc
+```
+
+ which can be created with:
+```
+bm --create-config
+```
+
+A simple configuration would be:
+```
+[general]
+bmfile $HOME/bookmarks
+editor vim
+browser firefox
+```
+
+By default the launcher uses xdg-open and http/https bookmarks must start with http:// or https://. Changing the default browser, urls like "github.com" are going to work as expected.
+
+### URL patterns
+
+cli-bookmarker is able to open specific urls with specific software.
+A simple configuration:
+```bash
+[urls]
+#launch youtube videos on vlc
+youtube.com/watch vlc 
+#launch github with firefox
+github.com firefox
+#laucnh gemini's protocol URLs in the terminal browser amfora
+gemini:// amfora
+```
+this works by matching the url the user intends to launch with every
+entry in \[urls\], the last match one that matches, will set the launcher.
+
+
+
 ## Tools Required
 * fzf
 * software from gnu core utils like cat, sed, awk, echo, column...
@@ -20,7 +60,7 @@ bm [option] [url]
 --create-config, create a configuration file: $HOME/.config/cli-bookmarker/bmrc
 -l, list all the bookmarks
 -r, remove bookmark with the specified id, or search with fzf if not
--o, open bookmark if id is specified, search with fzf if not 
+-o, open bookmark if id is specified, open URL if a url is specified or, search with fzf if no argument was given
 -e, edit with default text editor
 -t, fuzzy search of entries with an especific tag
 ```
@@ -28,9 +68,7 @@ bm [option] [url]
 ## Examples
 
 create a configuration file
-```
-bm --create-config
-```
+
 
 add a bookmark
 ```
@@ -96,5 +134,4 @@ bm -e
 
 * Help command
 * Version Command
-* open with xdg-open by default
 * import favorites from browser
