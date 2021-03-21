@@ -1,5 +1,5 @@
 # cli-bookmarker
-A very simple cli bookmarker made with shell script that allows
+A very simple cli bookmarker made with shell script that allows fuzzy searching and
 assignment of different URLs patterns for different launchers.
 
 ## Instalation
