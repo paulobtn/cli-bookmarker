@@ -1,6 +1,6 @@
 # cli-bookmarker
-A very simple cli bookmarker made with shell script.
-You can assign different URLs for different launchers
+A very simple cli bookmarker made with shell script that allows
+assignment of different URLs patterns for different launchers.
 
 ## Usage
 ```
