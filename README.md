@@ -31,7 +31,7 @@ editor vim
 browser firefox
 ```
 
-By default the launcher uses xdg-open and http/https bookmarks must start with http:// or https://. Changing the default browser, urls like "github.com" are going to work as expected.
+By default the launcher uses xdg-open and http/https bookmarks must start with http:// or https://. By changing the default browser, urls like "github.com" are going to work as expected.
 
 ### URL patterns
 
