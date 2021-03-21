@@ -2,6 +2,22 @@
 A very simple cli bookmarker made with shell script that allows
 assignment of different URLs patterns for different launchers.
 
+## Instalation
+just put the bm file somewhere you can launch such as $HOME/.local/bin: 
+```
+([ -d "$HOME/.local/bin" ] || mkdir -p "$HOME/.local/bin") && \
+curl -sSL https://raw.githubusercontent.com/paulonetodev/cli-bookmarker/main/bm -o "$HOME/.local/bin/bm" && \
+sudo chmod +x "$HOME/.local/bin/bm"
+```
+To launch as simply "bm" you should add #HOME/.local/bin to your path
+```
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+### Tools Required
+* fzf
+* software from gnu core utils like cat, sed, awk, echo, column... normally they are installed by default in your distribution
+
 ## Usage
 ```
 bm [url] [description]? [tag...]?
@@ -48,12 +64,6 @@ gemini:// amfora
 ```
 this works by matching the url the user intends to launch with every
 entry in \[urls\], the last one that matches will set the launcher.
-
-
-
-## Tools Required
-* fzf
-* software from gnu core utils like cat, sed, awk, echo, column...
 
 ## Options
 ```
