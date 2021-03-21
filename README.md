@@ -1,5 +1,6 @@
 # cli-bookmarker
-A very simple cli bookmarker made with shell script (still in development)
+A very simple cli bookmarker made with shell script.
+You can assign different URLs for different launchers
 
 ## Usage
 ```
@@ -7,6 +8,7 @@ bm [url] [description]? [tag]?
 bm [option]
 bm [option] [tag]
 bm [option] [id...]
+bm [option] [url]
 ```
 
 ## Tools Required
@@ -18,7 +20,7 @@ bm [option] [id...]
 --create-config, create a configuration file: $HOME/.config/cli-bookmarker/bmrc
 -l, list all the bookmarks
 -r, remove bookmark with the specified id, or search with fzf if not
--o, -s, open bookmark if id is specified, search with fzf if not 
+-o, open bookmark if id is specified, search with fzf if not 
 -e, edit with default text editor
 -t, fuzzy search of entries with an especific tag
 ```
@@ -75,6 +77,11 @@ fzf search before launching
 bm -o
 ```
 
+launch any URL
+```
+bm -o w3.org
+```
+
 fzf search filtered by tags
 ```
 bm -t music
@@ -87,9 +94,7 @@ bm -e
 
 ## TODO
 
-* Command to create a configuration file
 * Help command
 * Version Command
 * open with xdg-open by default
 * import favorites from browser
-* feature to open urls directly, not necessarily using the id

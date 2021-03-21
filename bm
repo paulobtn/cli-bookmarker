@@ -200,18 +200,29 @@ case $1 in
             sed -i.bak `join_by ";" $(printf '%s\n' "${ARR[*]}")` ${BM_DB} 
         fi       
         ;;
-    "-o"|""|"-s") 
-        #open bookmark
+    "-o"|"") 
+        # bm -o and bm open search prompt
+        # bm -o <url> launch a website
+        # bm -o <id> launch website from bookmark
+        #open bookmark or URL
         if [ -z "$2" ]; then 
             # id not provided: open search prompt
-            # LINE=`cat -n ${BM_DB} | fzf`             
             LINE=`bm_print ${BM_DB} | fzf`             
             if [ ! -z "$LINE" ]; then 
                 URL=`echo $LINE | awk '{print $2}'`
             fi
         else
-            #id is provided: just take URL from array
-            URL=`sed -n $2p ${BM_DB} | awk '{print $1}'`
+            #argument was provided
+            re='^[0-9]+$'
+            if ! [[ $2 =~ $re ]] ; then
+                # not a number, assume it's a url
+                URL=$2
+            else 
+                #it's a number: just take the URL from the line number provided
+                URL=`sed -n $2p ${BM_DB} | awk '{print $1}'`
+            fi
+
+            
         fi
         [ ! -z "$URL" ] && $(get_launcher $URL "URLS") $URL;
         ;;
@@ -225,7 +236,7 @@ case $1 in
                 [ ! -z "$URL" ] && $(get_launcher $URL "URLS") $URL > /dev/null;
             fi
         else
-            echo "must have a tag as input"
+            echo "must have a tag as input" >&2; exit 1
         fi
         ;;
     "-e")
@@ -240,7 +251,7 @@ case $1 in
         ;;    
     *)
         if [[ ${1:0:1} == "-" ]]; then
-            echo "invalid command"
+            echo "invalid command" >&2; exit 1
         else
             #bm [url] [description]? [tags]? should add a bookmark
             SITE=$1
