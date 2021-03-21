@@ -4,7 +4,7 @@ You can assign different URLs for different launchers
 
 ## Usage
 ```
-bm [url] [description]? [tag]?
+bm [url] [description]? [tag...]?
 bm [option]
 bm [option] [tag]
 bm [option] [id...]
