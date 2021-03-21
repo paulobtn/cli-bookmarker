@@ -67,6 +67,60 @@ cat <<EOF
 EOF
 }
 
+function output_help(){
+cat <<EOF
+
+bookmark-cli: Save and launch bookmarks
+
+Usage:
+
+    bm [url] [description]? [tag...]?
+    bm [option]
+    bm [option] [tag]
+    bm [option] [id...]
+    bm [option] [url]
+
+Options:
+
+    -l, list all the bookmarks
+    -r, remove bookmark with the specified id, or search with fzf if not
+    -o, open bookmark if id is specified, open URL if a url is specified or, search with fzf if no argument was given
+    -e, edit with default text editor
+    -t, fuzzy search of entries with an especific tag
+
+    --create-config, create a configuration file: $HOME/.config/cli-bookmarker/bmrc
+
+Examples
+
+    Create bookmark. Description and tags are optional
+    bm https://wiki.archlinux.org 
+    bm https://wiki.archlinux.org "arch wiki"
+    bm https://wiki.archlinux.org "arch wiki" tag1 tag2
+
+    list bookmarks, it's possible to filter by tags
+    bm -l
+    bm -l classical-music
+
+    remove entries. If no argument is given a fuzzy search prompt will open
+    multiple entries can be selected with tab
+    bm -r 
+    bm -r 2 3
+
+    launch any URL or bookmark entry.
+    If no argument is provided, a fuzzy search prompt will open.
+    bm -o www.linux.org
+    bm -o 2
+    bm -o
+
+    search bookmark with specific tag
+    bm -t linux
+
+    edit bookmark file
+    bm -e
+
+More help at <https://github.com/paulonetodev/cli-bookmarker>
+EOF
+}
 
 # should receive the URL that will be launched and the URLS array from the configuration file
 # it returns the launcher associated with the last URL that matches with the URLS array
@@ -243,6 +297,9 @@ case $1 in
         #edit with text editor
         ${BM_EDITOR} ${BM_DB}
         ;;
+    "-h")
+        output_help
+        ;;
     "--create-config")
         DIR="$HOME/.config/cli-bookmarker/"
         [ ! -d "$DIR" ] && mkdir -p "$DIR"
@@ -251,7 +308,7 @@ case $1 in
         ;;    
     *)
         if [[ ${1:0:1} == "-" ]]; then
-            echo "invalid command" >&2; exit 1
+            echo "invalid command. Use bm -h for help" >&2; exit 1
         else
             #bm [url] [description]? [tags]? should add a bookmark
             SITE=$1
