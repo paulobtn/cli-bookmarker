@@ -4,7 +4,7 @@
 
 BM_LAUNCHER=${BROWSER} #browser that launches the URLs
 BM_EDITOR=${EDITOR} # browser editor used with bm -e
-BM_DB="./bookmarks" # where the bookmarks are stored
+BM_DB="$HOME/bookmarks" # where the bookmarks are stored
 CONFIG_FILE="$HOME/.config/cli-bookmarker/bmrc"
 
 #Helper Functions
@@ -40,7 +40,7 @@ cat <<EOF
 # example:
 #
 # [general]
-# bmfile ./bookmarks
+# bmfile $HOME/bookmarks
 # editor vim
 # browser firefox
 ####################################################################
@@ -102,7 +102,7 @@ if test -f "$CONFIG_FILE"; then
     CURR="none";
     while IFS= read -r line
     do
-        line=`echo $line | trim`
+        line=`echo $line | trim | envsubst`
         if [ "$line" = "[general]" ]; then
             CURR="general"
         elif [ "$line" = "[urls]" ]; then
@@ -168,7 +168,6 @@ else
     echo "Configuration file not found. You can create one with bm --create-config"
 fi
 
-# echo $BM_DB
 #Main logic
 case $1 in
     "-l") 
