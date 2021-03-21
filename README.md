@@ -86,5 +86,4 @@ bm -e
 * open with xdg-open by default
 * import favorites from browser
 * feature to open urls directly, not necessarily using the id
-* html page with tag filtering
-* should create an empty file when listing if no file is found
+* improve the formatting
