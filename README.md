@@ -15,6 +15,7 @@ bm [option] [id...]
 
 ## Options
 ```
+--create-config, create a configuration file: $HOME/.config/cli-bookmarker/bmrc
 -l, list all the bookmarks
 -r, remove bookmark with the specified id, or search with fzf if not
 -o, -s, open bookmark if id is specified, search with fzf if not 
@@ -23,6 +24,11 @@ bm [option] [id...]
 ```
 
 ## Examples
+
+create a configuration file
+```
+bm --create-config
+```
 
 add a bookmark
 ```
