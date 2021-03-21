@@ -62,12 +62,27 @@ if test -f "$CONFIG_FILE"; then
             case $CURR in
                 "general")
                     if [ ! -z "$line" ]; then
-                        GENERAL+=("$line")
+                        # [[ ! $line = \#* ]] && GENERAL+=("$line")
+                        case $line in 
+                            "#"*) 
+                                # line is commented
+                            ;; 
+                            *) GENERAL+=("$line") 
+                            ;;
+                        esac
                     fi
                 ;;
                 "urls")
                     if [ ! -z "$line" ]; then
-                        URLS+=("$line")
+                        case $line in 
+                            "#"*) 
+                                # line is commented
+                            ;; 
+                            *) 
+                            URLS+=("$line")
+                            ;;
+                        esac
+                        
                     fi
                 ;;
                 *)
@@ -75,6 +90,9 @@ if test -f "$CONFIG_FILE"; then
             esac
         fi       
     done < $CONFIG_FILE
+
+    echo ${GENERAL[@]}
+    echo ${URLS[@]}
 
     # assign new config defaults
     for i in "${GENERAL[@]}"

@@ -79,8 +79,11 @@ edit with default text editor
 bm -e
 ```
 
-## TODO features
+## TODO
 
+* Command to create a configuration file
+* Help command
+* Version Command
 * open with xdg-open by default
 * import favorites from browser
 * feature to open urls directly, not necessarily using the id
