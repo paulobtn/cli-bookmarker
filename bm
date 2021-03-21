@@ -67,6 +67,17 @@ cat <<EOF
 EOF
 }
 
+function output_version(){
+cat <<EOF
+cli-bookmarker 1.0
+License GPLv3: GNU GPL version 3.
+This is free software: you are free to change and redistribute it.
+
+Written by Paulo Neto
+<https://github.com/paulonetodev/cli-bookmarker/>
+EOF
+}
+
 function output_help(){
 cat <<EOF
 
@@ -87,6 +98,8 @@ Options:
     -o, open bookmark if id is specified, open URL if a url is specified or, search with fzf if no argument was given
     -e, edit with default text editor
     -t, fuzzy search of entries with an especific tag
+    -h, help
+    -v, version
 
     --create-config, create a configuration file: $HOME/.config/cli-bookmarker/bmrc
 
@@ -299,6 +312,9 @@ case $1 in
         ;;
     "-h")
         output_help
+        ;;
+    "-v")
+        output_version
         ;;
     "--create-config")
         DIR="$HOME/.config/cli-bookmarker/"
