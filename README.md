@@ -67,9 +67,6 @@ entry in \[urls\], the last one that matches will set the launcher.
 
 ## Examples
 
-create a configuration file
-
-
 add a bookmark
 ```
 bm https://www.github.com
