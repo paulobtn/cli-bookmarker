@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # Defaults settings
+
 BM_LAUNCHER=${BROWSER} #browser that launches the URLs
 BM_EDITOR=${EDITOR} # browser editor used with bm -e
 BM_DB="./bookmarks" # where the bookmarks are stored
@@ -22,18 +23,18 @@ function bm_print(){
 # it returns the launcher associated with the last URL that matches with the URLS array
 function get_launcher(){
     # URL we want to launch
-    LAUNCH_URL=$1
+    local LAUNCH_URL=$1
     # URLs associated with diferent launchers in the config file
-    URLS_ARR_N=$2[@]
-    URLS_ARR=("${!URLS_ARR_N}")
+    local URLS_ARR_N=$2[@]
+    local URLS_ARR=("${!URLS_ARR_N}")
     #default launcher if no match occurs
-    LAUNCHER=$BM_LAUNCHER
+    local LAUNCHER=$BM_LAUNCHER
 
     #check if there's a match in the URLS array
     for i in "${URLS_ARR[@]}"
     do
-        CURRENT_URL=`echo $i | awk '{print $1}'`
-        CURRENT_APP=`echo $i | awk '{print $2}'`
+        local CURRENT_URL=`echo $i | awk '{print $1}'`
+        local CURRENT_APP=`echo $i | awk '{print $2}'`
         if grep -q "$CURRENT_URL" <<< "$LAUNCH_URL"; then
             LAUNCHER=$CURRENT_APP
         fi
@@ -151,7 +152,7 @@ case $1 in
             if [ ! -z "$LINE" ]; then 
                 # open the selected url
                 URL=`echo $LINE | awk '{print $2}'`
-                [ ! -z "$URL" ] && $(get_launcher $URL "URLS") $URL;
+                [ ! -z "$URL" ] && $(get_launcher $URL "URLS") $URL > /dev/null;
             fi
         else
             echo "must have a tag as input"
