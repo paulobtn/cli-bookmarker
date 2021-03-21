@@ -145,6 +145,6 @@ bm -e
 
 ## License
 
-License GPLv3: GNU GPL version 3.
-This is free software: you are free to change and redistribute it.
+License GPLv3: GNU GPL version 3. <br>
+This is free software: you are free to change and redistribute it. <br>
 Written by Paulo Neto
