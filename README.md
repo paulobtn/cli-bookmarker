@@ -3,7 +3,7 @@ A very simple cli bookmarker made with shell script that allows
 assignment of different URLs patterns for different launchers.
 
 ## Instalation
-just put the bm file somewhere you can launch such as $HOME/.local/bin: 
+put the bm file somewhere you can launch such as $HOME/.local/bin: 
 ```
 ([ -d "$HOME/.local/bin" ] || mkdir -p "$HOME/.local/bin") && \
 curl -sSL https://raw.githubusercontent.com/paulonetodev/cli-bookmarker/main/bm -o "$HOME/.local/bin/bm" && \
