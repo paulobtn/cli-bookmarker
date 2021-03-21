@@ -11,6 +11,13 @@ CONFIG_FILE="./bmrc"
 # join string
 function join_by { local d=${1-} f=${2-}; if shift 2; then printf %s "$f" "${@/#/$d}"; fi; }
 
+# beautiful print of bookmark file
+function bm_print(){ 
+    local f=$1
+    # cat -n $f | awk '{ $3 = "\t" $3; print}' | column -t -s $'\t' 
+    cat -n $f | column -t -s $'\t' 
+}
+
 # should receive the URL that will be launched and the URLS array from the configuration file
 # it returns the launcher associated with the last URL that matches with the URLS array
 function get_launcher(){
@@ -96,10 +103,11 @@ case $1 in
         #list bookmarks
         if [ -z "$2" ]; then 
             # no tag was given: list all
-            cat -n ${BM_DB}
+            # cat -n ${BM_DB} | awk '{ $3 = "\t" $3; print}' | column -t -s $'\t'
+            bm_print ${BM_DB}
         else
             # tag was given: list only entries that match
-            cat -n ${BM_DB} | grep "\[*$2"
+             bm_print ${BM_DB} | grep "\[*$2"
         fi   
         ;;
     "-r") 
@@ -113,31 +121,33 @@ case $1 in
             done
         else
             # user can select multiple entries. This returns the ids list that will be used by sed, example: [3d 5d 7d]
-            ARR=(`cat -n ./bookmarks | fzf -m | awk '{print $1"d"}' | xargs echo`)
+            # ARR=(`cat -n ./bookmarks | fzf -m | awk '{print $1"d"}' | xargs echo`)
+            ARR=(`bm_print ${BM_DB} | fzf -m | awk '{print $1"d"}' | xargs echo`)
         fi
         #delete the lines
         if [ ${#ARR[@]} -ne "0" ]; then
-            sed -i.bak `join_by ";" $(printf '%s\n' "${ARR[*]}")` ./bookmarks 
+            sed -i.bak `join_by ";" $(printf '%s\n' "${ARR[*]}")` ${BM_DB} 
         fi       
         ;;
     "-o"|""|"-s") 
         #open bookmark
         if [ -z "$2" ]; then 
             # id not provided: open search prompt
-            LINE=`cat -n ./bookmarks | fzf`             
+            # LINE=`cat -n ${BM_DB} | fzf`             
+            LINE=`bm_print ${BM_DB} | fzf`             
             if [ ! -z "$LINE" ]; then 
                 URL=`echo $LINE | awk '{print $2}'`
             fi
         else
             #id is provided: just take URL from array
-            URL=`sed -n $2p ./bookmarks | awk '{print $1}'`
+            URL=`sed -n $2p ${BM_DB} | awk '{print $1}'`
         fi
         [ ! -z "$URL" ] && $(get_launcher $URL "URLS") $URL;
         ;;
     "-t")
         # open with tag search
         if [ ! -z "$2" ]; then 
-            LINE=`cat -n bookmarks | grep "\[*$2" | fzf`
+            LINE=`bm_print ${BM_DB} | grep "\[*$2" | fzf`
             if [ ! -z "$LINE" ]; then 
                 # open the selected url
                 URL=`echo $LINE | awk '{print $2}'`
@@ -176,8 +186,7 @@ case $1 in
             fi
             # echo $SITE $DESCR $TAGSSTR >> bookmarks        
             # echo -e "$SITE $DESCR $TAGSSTR" >> ${BM_DB}q
-            echo -e "$SITE $DESCR $TAGSSTR" >> ${BM_DB}
-            echo "Bookmark added: $SITE -- $DESCR"        
+            echo -e "$SITE\t$DESCR\t$TAGSSTR" >> ${BM_DB}   
         fi
         ;;
 esac
