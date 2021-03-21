@@ -74,7 +74,7 @@ github.com firefox
 gemini:// amfora
 ```
 this works by matching the url the user intends to launch with every
-entry in \[urls\], the last one that matches will set the launcher.
+entry in \[urls\], the last one that matches will define the launcher.
 
 
 ## Examples
