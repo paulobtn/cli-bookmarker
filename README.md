@@ -119,8 +119,9 @@ open the second entry
 bm -o 2
 ```
 
-fzf search before launching
+search and launch bookmark
 ```
+bm
 bm -o
 ```
 
