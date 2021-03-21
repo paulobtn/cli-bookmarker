@@ -1,3 +1,7 @@
-www.github.com	github	[programming] 
-youtube.com	website for videos	[videos] 
-example.com	an example website	[randomtag] 
+https://www.youtube.com/watch?v=dQw4w9WgXcQ	some random song	[music youtube] 
+https://www.youtube.com	website for videos	
+github.com	github	[programming] 
+example.com	an example website	[example] 
+gemini://gemini.circumlunar.space/capcom/	CAPCOM - A gemini agregator	[GEMINI] 
+gemini://gemini.circumlunar.space/capcom/		CAPCOM - A gemine agregator	[GEMINI] 
+example3.com		another example	[tag2] 

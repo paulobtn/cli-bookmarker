@@ -1,18 +1,48 @@
 #!/bin/sh
 
-# a string join function
+# Defaults settings
+BM_LAUNCHER=${BROWSER} #browser that launches the URLs
+BM_EDITOR=${EDITOR} # browser editor used with bm -e
+BM_DB="./bookmarks" # where the bookmarks are stored
+CONFIG_FILE="./bmrc"
+
+#Helper Functions
+
+# join string
 function join_by { local d=${1-} f=${2-}; if shift 2; then printf %s "$f" "${@/#/$d}"; fi; }
 
-BM_LAUNCHER=${BROWSER}
-BM_EDITOR=${EDITOR}
-BM_DB="./bookmarks"
+# should receive the URL that will be launched and the URLS array from the configuration file
+# it returns the launcher associated with the last URL that matches with the URLS array
+function get_launcher(){
+    # URL we want to launch
+    LAUNCH_URL=$1
+    # URLs associated with diferent launchers in the config file
+    URLS_ARR_N=$2[@]
+    URLS_ARR=("${!URLS_ARR_N}")
+    #default launcher if no match occurs
+    LAUNCHER=$BM_LAUNCHER
 
-CONFIG_FILE="./bmrc"
-if test -f "$CONFIG_FILE"; then
-    GENERAL=()
-    URLS=()
+    #check if there's a match in the URLS array
+    for i in "${URLS_ARR[@]}"
+    do
+        CURRENT_URL=`echo $i | awk '{print $1}'`
+        CURRENT_APP=`echo $i | awk '{print $2}'`
+        if grep -q "$CURRENT_URL" <<< "$LAUNCH_URL"; then
+            LAUNCHER=$CURRENT_APP
+        fi
+    done
+    
+    echo $LAUNCHER
+}
+
+# Parsing the configuration file
+# These arrays represent the lines of each section of bmrc
+GENERAL=()
+URLS=()
+
+if test -f "$CONFIG_FILE"; then 
+    #Config file exists: Parse it and assign new defaults
     CURR="none";
-
     while IFS= read -r line
     do  
         if [ "$line" = "[general]" ]; then
@@ -38,7 +68,7 @@ if test -f "$CONFIG_FILE"; then
         fi       
     done < $CONFIG_FILE
 
-    # assign config defaults
+    # assign new config defaults
     for i in "${GENERAL[@]}"
     do
         gc=`echo $i | awk '{print $1}'`
@@ -58,15 +88,9 @@ if test -f "$CONFIG_FILE"; then
             ;;
         esac
     done;
-
-    # printf '%s\n' "${GENERAL[@]}"
-    # printf '%s\n' "${URLS[@]}"
-
-else
-    echo "Config file not found"
 fi
 
-
+#Main logic
 case $1 in
     "-l") 
         #list bookmarks
@@ -94,33 +118,30 @@ case $1 in
         #delete the lines
         if [ ${#ARR[@]} -ne "0" ]; then
             sed -i.bak `join_by ";" $(printf '%s\n' "${ARR[*]}")` ./bookmarks 
-        fi
-        
+        fi       
         ;;
     "-o"|""|"-s") 
         #open bookmark
         if [ -z "$2" ]; then 
-            # id not provided, open search prompt
-            LINE=`cat -n ./bookmarks | fzf`
-                    
-            echo $LINE
+            # id not provided: open search prompt
+            LINE=`cat -n ./bookmarks | fzf`             
             if [ ! -z "$LINE" ]; then 
-                # open the selected url
-                $BM_LAUNCHER `echo $LINE | awk '{print $2}'`
+                URL=`echo $LINE | awk '{print $2}'`
             fi
         else
-            #id is provided, open url
-            $BM_LAUNCHER `sed -n $2p ./bookmarks | awk '{print $1}'`;
+            #id is provided: just take URL from array
+            URL=`sed -n $2p ./bookmarks | awk '{print $1}'`
         fi
+        [ ! -z "$URL" ] && $(get_launcher $URL "URLS") $URL;
         ;;
     "-t")
         # open with tag search
         if [ ! -z "$2" ]; then 
             LINE=`cat -n bookmarks | grep "\[*$2" | fzf`
-
             if [ ! -z "$LINE" ]; then 
                 # open the selected url
-                $BM_LAUNCHER `echo $LINE | awk '{print $2}'`
+                URL=`echo $LINE | awk '{print $2}'`
+                [ ! -z "$URL" ] && $(get_launcher $URL "URLS") $URL;
             fi
         else
             echo "must have a tag as input"
@@ -154,7 +175,9 @@ case $1 in
 
             fi
             # echo $SITE $DESCR $TAGSSTR >> bookmarks        
-            echo -e "$SITE\t$DESCR\t$TAGSSTR" >> ${BM_DB}        
+            # echo -e "$SITE $DESCR $TAGSSTR" >> ${BM_DB}q
+            echo -e "$SITE $DESCR $TAGSSTR" >> ${BM_DB}
+            echo "Bookmark added: $SITE -- $DESCR"        
         fi
         ;;
 esac
