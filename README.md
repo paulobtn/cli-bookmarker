@@ -19,12 +19,12 @@ By default, cli-bookmarker will look for the configuration file:
 ```
 
  which can be created with:
-```
+```bash
 bm --create-config
 ```
 
 A simple configuration would be:
-```
+```bash
 [general]
 bmfile $HOME/bookmarks
 editor vim
@@ -39,11 +39,11 @@ cli-bookmarker is able to open specific urls with specific software.
 A simple configuration:
 ```bash
 [urls]
-#launch youtube videos on vlc
+# launch youtube videos on vlc
 youtube.com/watch vlc 
-#launch github with firefox
+# launch github with firefox
 github.com firefox
-#laucnh gemini's protocol URLs in the terminal browser amfora
+# launch gemini's URLs in the terminal browser amfora
 gemini:// amfora
 ```
 this works by matching the url the user intends to launch with every
