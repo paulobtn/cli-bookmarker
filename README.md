@@ -140,4 +140,11 @@ bm -e
 ```
 
 ## TODO
+
 * import favorites from browser
+
+## License
+
+License GPLv3: GNU GPL version 3.
+This is free software: you are free to change and redistribute it.
+Written by Paulo Neto
