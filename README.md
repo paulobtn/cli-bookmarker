@@ -63,8 +63,8 @@ entry in \[urls\], the last one that matches will set the launcher.
 -o, open bookmark if id is specified, open URL if a url is specified or, search with fzf if no argument was given
 -e, edit with default text editor
 -t, fuzzy search of entries with an especific tag
--h, show help
--v, show version
+-h,--help show help
+-v,--version show version
 ```
 
 ## Examples
