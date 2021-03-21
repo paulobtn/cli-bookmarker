@@ -15,7 +15,7 @@ bm [option] [url]
 
 By default, cli-bookmarker will look for the configuration file:
 ```
-%HOME/.config/cli-bookmarker/bmrc
+$HOME/.config/cli-bookmarker/bmrc
 ```
 
  which can be created with:
