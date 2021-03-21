@@ -141,7 +141,7 @@ if test -f "$CONFIG_FILE"; then
         fi       
     done < $CONFIG_FILE
 
-    echo ${GENERAL[@]}
+    # echo ${GENERAL[@]}
     # echo ${URLS[@]}
 
     # assign new config defaults
@@ -168,6 +168,7 @@ else
     echo "Configuration file not found. You can create one with bm --create-config"
 fi
 
+# echo $BM_DB
 #Main logic
 case $1 in
     "-l") 
