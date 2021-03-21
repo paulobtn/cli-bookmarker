@@ -1,7 +1,45 @@
+###################################################################
+# General Configuration
+#------------------------------------------------------------------
+# 
+# Must be written bellow [general]
+#
+# bmfile <file> is the default bookmark file
+# editor <editor> is the default text editor
+# browser <browser> defines the default browser
+#
+# example:
+#
+# [general]
+# bmfile ./bookmarks
+# editor vim
+# browser firefox
+####################################################################
+
 [general]
 bmfile ./bookmarks
 editor vim
 browser brave
+
+#####################################################################
+# URL Configuration
+#--------------------------------------------------------------------
+#
+# Must be written bellow [urls]
+#
+# You can assign specific URLs to specific software
+# the url selected with bm -o will be matched with the urls bellow
+# and the software from the last match will be chosen 
+# [url pattern] <software>
+#
+# example:
+# 
+# [urls]
+#
+# youtube.com/watch mpv
+# gemini:// amfora
+# github.com firefox
+######################################################################
 
 [urls]
 youtube.com librewolf

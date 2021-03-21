@@ -5,12 +5,17 @@
 BM_LAUNCHER=${BROWSER} #browser that launches the URLs
 BM_EDITOR=${EDITOR} # browser editor used with bm -e
 BM_DB="./bookmarks" # where the bookmarks are stored
-CONFIG_FILE="./bmrc"
+CONFIG_FILE="$HOME/.config/cli-bookmarker/bmrc"
 
 #Helper Functions
 
 # join string
 function join_by { local d=${1-} f=${2-}; if shift 2; then printf %s "$f" "${@/#/$d}"; fi; }
+
+# trim string
+function trim(){ 
+    sed -e 's/^[[:space:]]*//'
+}
 
 # beautiful print of bookmark file
 function bm_print(){ 
@@ -18,6 +23,50 @@ function bm_print(){
     # cat -n $f | awk '{ $3 = "\t" $3; print}' | column -t -s $'\t' 
     cat -n $f | column -t -s $'\t' 
 }
+
+# output configuration file
+function output_config(){
+cat <<EOF
+###################################################################
+# General Configuration
+#------------------------------------------------------------------
+# 
+# Must be written bellow [general]
+#
+# bmfile <file> is the default bookmark file
+# editor <editor> is the default text editor
+# browser <browser> defines the default browser
+#
+# example:
+#
+# [general]
+# bmfile ./bookmarks
+# editor vim
+# browser firefox
+####################################################################
+
+#####################################################################
+# URL Configuration
+#--------------------------------------------------------------------
+#
+# Must be written bellow [urls]
+#
+# You can assign specific URLs to specific software
+# the url selected with bm -o will be matched with the urls bellow
+# and the software from the last match will be chosen 
+# [url pattern] <software>
+#
+# example:
+# 
+# [urls]
+#
+# youtube.com/watch mpv
+# gemini:// amfora
+# github.com firefox
+######################################################################
+EOF
+}
+
 
 # should receive the URL that will be launched and the URLS array from the configuration file
 # it returns the launcher associated with the last URL that matches with the URLS array
@@ -52,7 +101,8 @@ if test -f "$CONFIG_FILE"; then
     #Config file exists: Parse it and assign new defaults
     CURR="none";
     while IFS= read -r line
-    do  
+    do
+        line=`echo $line | trim`
         if [ "$line" = "[general]" ]; then
             CURR="general"
         elif [ "$line" = "[urls]" ]; then
@@ -92,7 +142,7 @@ if test -f "$CONFIG_FILE"; then
     done < $CONFIG_FILE
 
     echo ${GENERAL[@]}
-    echo ${URLS[@]}
+    # echo ${URLS[@]}
 
     # assign new config defaults
     for i in "${GENERAL[@]}"
@@ -114,6 +164,8 @@ if test -f "$CONFIG_FILE"; then
             ;;
         esac
     done;
+else
+    echo "Configuration file not found. You can create one with bm --create-config"
 fi
 
 #Main logic
@@ -179,7 +231,13 @@ case $1 in
     "-e")
         #edit with text editor
         ${BM_EDITOR} ${BM_DB}
-        ;;        
+        ;;
+    "--create-config")
+        DIR="$HOME/.config/cli-bookmarker/"
+        [ ! -d "$DIR" ] && mkdir -p "$DIR"
+        output_config > "$DIR/bmrc"
+        echo "Configuration file created: $HOME/.config/cli-bookmarker/bmrc"
+        ;;    
     *)
         if [[ ${1:0:1} == "-" ]]; then
             echo "invalid command"
@@ -203,8 +261,6 @@ case $1 in
                 fi   
 
             fi
-            # echo $SITE $DESCR $TAGSSTR >> bookmarks        
-            # echo -e "$SITE $DESCR $TAGSSTR" >> ${BM_DB}q
             echo -e "$SITE\t$DESCR\t$TAGSSTR" >> ${BM_DB}   
         fi
         ;;
