@@ -128,7 +128,5 @@ bm -e
 ```
 
 ## TODO
-
-* Help command
 * Version Command
 * import favorites from browser
