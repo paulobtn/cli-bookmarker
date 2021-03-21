@@ -11,15 +11,10 @@
 # example:
 #
 # [general]
-# bmfile ./bookmarks
+# bmfile /home/link/bookmarks
 # editor vim
 # browser firefox
 ####################################################################
-
-[general]
-bmfile ./bookmarks
-editor vim
-browser brave
 
 #####################################################################
 # URL Configuration
@@ -40,9 +35,3 @@ browser brave
 # gemini:// amfora
 # github.com firefox
 ######################################################################
-
-[urls]
-youtube.com librewolf
-youtube.com/watch mpv
-google.com brave
-gemini:// amfora
