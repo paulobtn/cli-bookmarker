@@ -1,6 +1,6 @@
 # cli-bookmarker
 A very simple cli bookmarker made with shell script that allows fuzzy searching and
-assignment of different URLs patterns for different launchers. <br>
+assignment of different launchers for different URLs patterns. <br>
 
 Some things you can do with cli-bookmarker:
 * Share bookmarks across different protocols: http, gopher, gemini... each one opening with its respective browser
