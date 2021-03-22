@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Defaults settings
 # BM_LAUNCHER=${BROWSER} #browser that launches the URLs
