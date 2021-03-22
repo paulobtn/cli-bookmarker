@@ -155,6 +155,7 @@ bm -e
 * Import favorites from browser
 * Limit the amount of characters in the url when displaying in fzf
 * Make it POSIX compliant
+* still needs some optimizations
 
 ## License
 
