@@ -14,7 +14,7 @@ put the bm file somewhere you can launch such as $HOME/.local/bin:
 curl -sSL https://raw.githubusercontent.com/paulonetodev/cli-bookmarker/main/bm -o "$HOME/.local/bin/bm" && \
 sudo chmod +x "$HOME/.local/bin/bm"
 ```
-To launch as simply "bm" you should add $HOME/.local/bin to your path
+To launch as simply "bm" you should add $HOME/.local/bin to your path:
 ```
 export PATH="$HOME/.local/bin:$PATH"
 ```
