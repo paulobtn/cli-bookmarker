@@ -38,7 +38,7 @@ bm [option] [url]
 -r, remove bookmark with the specified id, or search with fzf if not
 -o, open bookmark if id is specified, open URL if a url is specified or, search with fzf if no argument was given
 -e, edit with default text editor
--t, fuzzy search of entries with an especific tag
+-t, list all tags if no argument is provided or fuzzy search of entries with a provided tag
 -h,--help show help
 -v,--version show version
 ```
@@ -135,6 +135,11 @@ launch any URL
 bm -o w3.org
 ```
 
+list all tags
+```
+bm -t
+```
+
 fzf search filtered by tags
 ```
 bm -t music
@@ -148,7 +153,6 @@ bm -e
 ## TODO
 
 * import favorites from browser
-* list tags with bm -t
 
 ## License
 

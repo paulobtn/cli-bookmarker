@@ -97,7 +97,7 @@ Options:
     -r, remove bookmark with the specified id, or search with fzf if not
     -o, open bookmark if id is specified, open URL if a url is specified or, search with fzf if no argument was given
     -e, edit with default text editor
-    -t, fuzzy search of entries with an especific tag
+    -t, if tag is provided, fuzzy search of entries with an especific tag. If tag is not provided, list all tags
     -h, --help show help
     -v, --version show version
         --create-config, create a configuration file: $HOME/.config/cli-bookmarker/bmrc
@@ -126,6 +126,9 @@ Examples
 
     search bookmark with specific tag
     bm -t linux
+
+    List all tags
+    bm -t
 
     edit bookmark file
     bm -e
@@ -295,14 +298,17 @@ case $1 in
     "-t")
         # open with tag search
         if [ ! -z "$2" ]; then 
+            # tag is provided, open search
             LINE=`bm_print ${BM_DB} | grep "\[*$2" | fzf`
             if [ ! -z "$LINE" ]; then 
                 # open the selected url
                 URL=`echo $LINE | awk '{print $2}'`
-                [ ! -z "$URL" ] && $(get_launcher $URL "URLS") $URL > /dev/null;
+                [ ! -z "$URL" ] && $(get_launcher $URL "URLS") $URL;
             fi
         else
-            echo "must have a tag as input" >&2; exit 1
+            # tag not provided, list all tags
+            all_tags=`cat ${BM_DB} | grep -oP '\[\K[^]]*'`
+            echo $all_tags | tr ' ' '\n' | sort -u
         fi
         ;;
     "-e")
