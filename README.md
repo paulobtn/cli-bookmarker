@@ -2,6 +2,14 @@
 A very simple cli bookmarker made with shell script that allows fuzzy searching and
 assignment of different URLs patterns for different launchers.
 
+## Use Cases
+
+Some things you can do with cli-bookmarker:
+
+* Share bookmarks across different protocols: http, gopher, gemini... each one opening with its respective browser
+* fuzzy search through your saved youtube videos and launch them with your music or video player
+* Use tags to organize your bookmarks
+
 ## Instalation
 put the bm file somewhere you can launch such as $HOME/.local/bin: 
 ```
