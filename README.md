@@ -148,7 +148,7 @@ bm -e
 ## TODO
 
 * import favorites from browser
-* list tags
+* list tags with bm -t
 
 ## License
 
