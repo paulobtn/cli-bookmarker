@@ -81,7 +81,7 @@ EOF
 function output_help(){
 cat <<EOF
 
-bookmark-cli: Save and launch bookmarks
+cli-bookmarker: Save and launch bookmarks
 
 Usage:
 
