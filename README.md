@@ -1,5 +1,5 @@
 # cli-bookmarker
-A very simple cli bookmarker made with shell script that allows fuzzy searching and
+A very simple cli bookmarker made with bash script that allows fuzzy searching and
 assignment of custom launchers for custom URLs patterns. <br>
 
 Some things you can do with cli-bookmarker:
@@ -152,8 +152,9 @@ bm -e
 
 ## TODO
 
-* import favorites from browser
-* limit the amount of characters in the url when displaying in fzf
+* Import favorites from browser
+* Limit the amount of characters in the url when displaying in fzf
+* Make it POSIX compliant
 
 ## License
 
