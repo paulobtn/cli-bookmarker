@@ -153,6 +153,7 @@ bm -e
 ## TODO
 
 * import favorites from browser
+* limit the amount of characters in the url when displaying in fzf
 
 ## License
 
