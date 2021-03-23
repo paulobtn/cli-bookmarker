@@ -155,10 +155,10 @@ bm -e
 * Import favorites from browser
 * Limit the amount of characters in the url when displaying in fzf
 * Make it POSIX compliant
-* Still needs some optimizations
+* Still needs some clean up and optimizations
 
 ## License
 
-License GPLv3: GNU GPL version 3. <br>
+License GPLv3 <br>
 This is free software: you are free to change and redistribute it. <br>
 Written by Paulo Neto
