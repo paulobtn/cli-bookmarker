@@ -153,7 +153,6 @@ bm -e
 ## TODO
 
 * Import favorites from browser
-* Limit the amount of characters in the url when displaying in fzf
 * Make it POSIX compliant
 * Still needs some clean up and optimizations
 
