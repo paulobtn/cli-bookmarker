@@ -10,21 +10,21 @@ CONFIG_FILE="$HOME/.config/cli-bookmarker/bmrc"
 #Helper Functions
 
 # join string
-function join_by { local d=${1-} f=${2-}; if shift 2; then printf %s "$f" "${@/#/$d}"; fi; }
+join_by() { local d=${1-} f=${2-}; if shift 2; then printf %s "$f" "${@/#/$d}"; fi; }
 
 # trim string
-function trim(){ 
+trim() { 
     sed -e 's/^[[:space:]]*//'
 }
 # beautiful print of bookmarks file
-function bm_print(){ 
-    local f=$1
+bm_print() { 
+    bm_print_f=$1
     # cat -n $f | awk '{ $3 = "\t" $3; print}' | column -t -s $'\t' 
-    cat -n $f | column -t -s $'\t' 
+    cat -n $bm_print_f | column -t -s $'\t' 
 }
 
 # output configuration file
-function output_config(){
+output_config() {
 cat <<EOF
 ###################################################################
 # General Configuration
@@ -66,7 +66,7 @@ cat <<EOF
 EOF
 }
 
-function output_version(){
+output_version() {
 cat <<EOF
 cli-bookmarker 1.1
 License GPLv3: GNU GPL version 3.
@@ -77,7 +77,7 @@ Written by Paulo Neto
 EOF
 }
 
-function output_help(){
+output_help() {
 cat <<EOF
 
 cli-bookmarker: Save and launch bookmarks
@@ -138,7 +138,7 @@ EOF
 
 # should receive the URL that will be launched and the URLS array from the configuration file
 # it returns the launcher associated with the last URL that matches with the URLS array
-function get_launcher(){
+get_launcher() {
     # URL we want to launch
     local LAUNCH_URL=$1
     # URLs associated with diferent launchers in the config file
