@@ -10,7 +10,7 @@ CONFIG_FILE="$HOME/.config/cli-bookmarker/bmrc"
 #Helper Functions
 
 # join string
-join_by() { local d=${1-} f=${2-}; if shift 2; then printf %s "$f" "${@/#/$d}"; fi; }
+join_by() { join_by_d=${1-} join_by_f=${2-}; if shift 2; then printf %s "$join_by_f" "${@/#/$join_by_d}"; fi; }
 
 # trim string
 trim() { 
@@ -220,7 +220,7 @@ case $1 in
             bm_print ${BM_DB}
         else
             # tag was given: list only entries that match
-             bm_print ${BM_DB} | grep "\[*$2"
+             bm_print ${BM_DB} | grep "\[.*$2"
         fi   
         ;;
     "-r") 
@@ -272,7 +272,7 @@ case $1 in
         # open with tag search
         if [ ! -z "$2" ]; then 
             # tag is provided, open search
-            LINE=`bm_print ${BM_DB} | grep "\[*$2" | fzf`
+            LINE=`bm_print ${BM_DB} | grep "\[.*$2" | fzf`
             if [ ! -z "$LINE" ]; then 
                 # open the selected url
                 URL=`echo $LINE | awk '{print $2}'`
