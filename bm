@@ -140,24 +140,24 @@ EOF
 # it returns the launcher associated with the last URL that matches with the URLS array
 get_launcher() {
     # URL we want to launch
-    GET_LAUNCHER_LAUNCH_URL=$1
+    GL_LAUNCH_URL=$1
     # URLs associated with diferent launchers in the config file
-    GET_LAUNCHER_URLS_ARR_N=$2[@]
-    GET_LAUNCHER_URLS_ARR=("${!GET_LAUNCHER_URLS_ARR_N}")
+    GL_URLS_ARR_N=$2[@]
+    GL_URLS_ARR=("${!GL_URLS_ARR_N}")
     #default launcher if no match occurs
-    GET_LAUNCHER_LAUNCHER=$BM_LAUNCHER
+    GL_LAUNCHER=$BM_LAUNCHER
 
     #check if there's a match in the URLS array
-    for i in "${GET_LAUNCHER_URLS_ARR[@]}"
+    for i in "${GL_URLS_ARR[@]}"
     do
-        GET_LAUNCHER_CURRENT_URL=`echo $i | awk '{print $1}'`
-        GET_LAUNCHER_CURRENT_APP=`echo $i | awk '{print $2}'`
-        if grep -q "$GET_LAUNCHER_CURRENT_URL" <<< "$GET_LAUNCHER_LAUNCH_URL"; then
-            GET_LAUNCHER_LAUNCHER=$GET_LAUNCHER_CURRENT_APP
+        GL_CURRENT_URL=`echo $i | awk '{print $1}'`
+        GL_CURRENT_APP=`echo $i | awk '{print $2}'`
+        if grep -q "$GL_CURRENT_URL" <<< "$GL_LAUNCH_URL"; then
+            GL_LAUNCHER=$GL_CURRENT_APP
         fi
     done
     
-    echo $GET_LAUNCHER_LAUNCHER
+    echo $GL_LAUNCHER
 }
 
 # Parsing the configuration file
@@ -217,7 +217,7 @@ case $1 in
         if [ -z "$2" ]; then 
             # no tag was given: list all
             # cat -n ${BM_DB} | awk '{ $3 = "\t" $3; print}' | column -t -s $'\t'
-            bm_print ${BM_DB}
+            bm_print ${BM_DB} | column -t -s $'\t'
         else
             # tag was given: list only entries that match
              bm_print ${BM_DB} | grep "\[.*$2.*\]"
