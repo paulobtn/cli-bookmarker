@@ -280,7 +280,7 @@ case $1 in
             fi
         else
             # tag not provided, list all tags
-            all_tags=`cat ${BM_DB} | grep -oP '\[\K[^]]*'`
+            all_tags=`grep -oP '\[\K[^]]*' ${BM_DB}`
             echo $all_tags | tr ' ' '\n' | sort -u
         fi
         ;;
