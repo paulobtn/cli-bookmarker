@@ -20,7 +20,8 @@ trim() {
 bm_print() { 
     bm_print_f=$1
     # cat -n $f | awk '{ $3 = "\t" $3; print}' | column -t -s $'\t' 
-    cat -n $bm_print_f | column -t -s $'\t' 
+    # cat -n $bm_print_f | column -t -s $'\t'
+    cat -n $bm_print_f 
 }
 
 # output configuration file
@@ -220,7 +221,7 @@ case $1 in
             bm_print ${BM_DB}
         else
             # tag was given: list only entries that match
-             bm_print ${BM_DB} | grep "\[.*$2"
+             bm_print ${BM_DB} | grep "\[.*$2.*\]"
         fi   
         ;;
     "-r") 
@@ -235,7 +236,7 @@ case $1 in
         else
             # user can select multiple entries. This returns the ids list that will be used by sed, example: [3d 5d 7d]
             # ARR=(`cat -n ./bookmarks | fzf -m | awk '{print $1"d"}' | xargs echo`)
-            ARR=(`bm_print ${BM_DB} | fzf -m | awk '{print $1"d"}' | xargs echo`)
+            ARR=(`bm_print ${BM_DB} | fzf -m --delimiter=$'\t' --preview-window right:45%:wrap --preview='printf "Title: %b\n\nTags: %b\n\nUrl: %b\n\n" {2} {3} {4}' | awk '{print $1"d"}' | xargs echo`)
         fi
         #delete the lines
         if [ ${#ARR[@]} -ne "0" ]; then
@@ -249,9 +250,10 @@ case $1 in
         #open bookmark or URL
         if [ -z "$2" ]; then 
             # id not provided: open search prompt
-            LINE=`bm_print ${BM_DB} | fzf`             
+            LINE=`bm_print ${BM_DB} | fzf --delimiter=$'\t' --preview-window right:45%:wrap --preview='printf "Title: %b\n\nTags: %b\n\nUrl: %b\n\n" {2} {3} {4}'`             
             if [ ! -z "$LINE" ]; then 
-                URL=`echo $LINE | awk '{print $2}'`
+                # URL=`echo $LINE | awk '{print $2}'`
+                URL=`echo $LINE | awk '{print $NF}'`
             fi
         else
             #argument was provided
@@ -261,7 +263,7 @@ case $1 in
                 URL=$2
             else 
                 #it's a number: just take the URL from the line number provided
-                URL=`sed -n $2p ${BM_DB} | awk '{print $1}'`
+                URL=`sed -n $2p ${BM_DB} | awk '{print $NF}'`
             fi
 
             
@@ -272,10 +274,10 @@ case $1 in
         # open with tag search
         if [ ! -z "$2" ]; then 
             # tag is provided, open search
-            LINE=`bm_print ${BM_DB} | grep "\[.*$2" | fzf`
+            LINE=`bm_print ${BM_DB} | grep "\[.*$2.*]" | fzf --delimiter=$'\t' --preview-window right:45%:wrap --preview='printf "Title: %b\n\nTags: %b\n\nUrl: %b\n\n" {2} {3} {4}'`
             if [ ! -z "$LINE" ]; then 
                 # open the selected url
-                URL=`echo $LINE | awk '{print $2}'`
+                URL=`echo $LINE | awk '{print $NF}'`
                 [ ! -z "$URL" ] && $(get_launcher $URL "URLS") $URL;
             fi
         else
@@ -323,7 +325,7 @@ case $1 in
                 fi   
 
             fi
-            echo -e "$SITE\t$DESCR\t$TAGSSTR" >> ${BM_DB}   
+            echo -e "$DESCR\t$TAGSSTR\t$SITE" >> ${BM_DB}   
         fi
         ;;
 esac
