@@ -155,6 +155,7 @@ bm -e
 * Import favorites from browser
 * Make it POSIX compliant
 * Still needs some clean up and optimizations
+* Add more customization
 
 ## License
 
