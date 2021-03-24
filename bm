@@ -16,7 +16,6 @@ function join_by { local d=${1-} f=${2-}; if shift 2; then printf %s "$f" "${@/#
 function trim(){ 
     sed -e 's/^[[:space:]]*//'
 }
-
 # beautiful print of bookmarks file
 function bm_print(){ 
     local f=$1
@@ -167,49 +166,23 @@ GENERAL=()
 URLS=()
 
 if test -f "$CONFIG_FILE"; then 
-    #Config file exists: Parse it and assign new defaults
-    CURR="none";
-    while IFS= read -r line
+  #Config file exists: Parse it and assign new defaults
+  CURR="none";
+  while IFS= read -r line
     do
-        line=`echo $line | trim | envsubst`
-        if [ "$line" = "[general]" ]; then
-            CURR="general"
-        elif [ "$line" = "[urls]" ]; then
-            CURR="urls"
-        else
-            # echo $CURR
-            case $CURR in
-                "general")
-                    if [ ! -z "$line" ]; then
-                        # [[ ! $line = \#* ]] && GENERAL+=("$line")
-                        case $line in 
-                            "#"*) 
-                                # line is commented
-                            ;; 
-                            *) GENERAL+=("$line") 
-                            ;;
-                        esac
-                    fi
-                ;;
-                "urls")
-                    if [ ! -z "$line" ]; then
-                        case $line in 
-                            "#"*) 
-                                # line is commented
-                            ;; 
-                            *) 
-                            URLS+=("$line")
-                            ;;
-                        esac
-                        
-                    fi
-                ;;
-                *)
-                ;;
-            esac
-        fi       
-    done < $CONFIG_FILE
-
+      line=`echo $line | trim | envsubst`
+      if [ "$line" = "[general]" ]; then CURR="general"
+      elif [ "$line" = "[urls]" ]; then CURR="urls"
+      else
+        case $CURR in
+            "general") GENERAL+=("$line") ;;
+            "urls") URLS+=("$line") ;;
+            *) ;;
+        esac
+      fi
+   done <<EOF
+$(sed 's/#.*$//;/^$/d' $CONFIG_FILE)
+EOF
     # echo ${GENERAL[@]}
     # echo ${URLS[@]}
 
