@@ -152,7 +152,7 @@ get_launcher() {
     do
         GL_CURRENT_URL=`echo $i | awk '{print $1}'`
         GL_CURRENT_APP=`echo $i | awk '{print $2}'`
-        if grep -q "$GL_CURRENT_URL" <<< "$GL_LAUNCH_URL"; then
+        if [ -n "`echo $GL_LAUNCH_URL | grep "$GL_CURRENT_URL"`" ]; then
             GL_LAUNCHER=$GL_CURRENT_APP
         fi
     done
