@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Defaults settings
-# BM_LAUNCHER=${BROWSER} #browser that launches the URLs
+CONFIG_DIR="$HOME/.config/cli-bookmarker/"
 BM_LAUNCHER=xdg-open #default application to launch URLs
 BM_EDITOR=${EDITOR} # change editor used with bm -e
 BM_DB="$HOME/bookmarks" # where the bookmarks are stored
@@ -19,7 +19,6 @@ trim() {
 # beautiful print of bookmarks file
 bm_print() { 
     bm_print_f=$1
-    # cat -n $f | awk '{ $3 = "\t" $3; print}' | column -t -s $'\t' 
     # cat -n $bm_print_f | column -t -s $'\t'
     cat -n $bm_print_f 
 }
@@ -69,7 +68,7 @@ EOF
 
 output_version() {
 cat <<EOF
-cli-bookmarker 1.2
+cli-bookmarker 2.0
 License GPLv3: GNU GPL version 3.
 This is free software: you are free to change and redistribute it.
 
@@ -141,24 +140,24 @@ EOF
 # it returns the launcher associated with the last URL that matches with the URLS array
 get_launcher() {
     # URL we want to launch
-    local LAUNCH_URL=$1
+    GET_LAUNCHER_LAUNCH_URL=$1
     # URLs associated with diferent launchers in the config file
-    local URLS_ARR_N=$2[@]
-    local URLS_ARR=("${!URLS_ARR_N}")
+    GET_LAUNCHER_URLS_ARR_N=$2[@]
+    GET_LAUNCHER_URLS_ARR=("${!GET_LAUNCHER_URLS_ARR_N}")
     #default launcher if no match occurs
-    local LAUNCHER=$BM_LAUNCHER
+    GET_LAUNCHER_LAUNCHER=$BM_LAUNCHER
 
     #check if there's a match in the URLS array
-    for i in "${URLS_ARR[@]}"
+    for i in "${GET_LAUNCHER_URLS_ARR[@]}"
     do
-        local CURRENT_URL=`echo $i | awk '{print $1}'`
-        local CURRENT_APP=`echo $i | awk '{print $2}'`
-        if grep -q "$CURRENT_URL" <<< "$LAUNCH_URL"; then
-            LAUNCHER=$CURRENT_APP
+        GET_LAUNCHER_CURRENT_URL=`echo $i | awk '{print $1}'`
+        GET_LAUNCHER_CURRENT_APP=`echo $i | awk '{print $2}'`
+        if grep -q "$GET_LAUNCHER_CURRENT_URL" <<< "$GET_LAUNCHER_LAUNCH_URL"; then
+            GET_LAUNCHER_LAUNCHER=$GET_LAUNCHER_CURRENT_APP
         fi
     done
     
-    echo $LAUNCHER
+    echo $GET_LAUNCHER_LAUNCHER
 }
 
 # Parsing the configuration file
@@ -297,9 +296,8 @@ case $1 in
         output_version
         ;;
     "--create-config")
-        DIR="$HOME/.config/cli-bookmarker/"
-        [ ! -d "$DIR" ] && mkdir -p "$DIR"
-        output_config > "$DIR/bmrc"
+        [ ! -d "$CONFIG_DIR" ] && mkdir -p "$CONFIG_DIR"
+        output_config > "$CONFIG_DIR/bmrc"
         echo "Configuration file created: $HOME/.config/cli-bookmarker/bmrc"
         ;;    
     *)
