@@ -69,7 +69,7 @@ EOF
 
 output_version() {
 cat <<EOF
-cli-bookmarker 1.1
+cli-bookmarker 1.2
 License GPLv3: GNU GPL version 3.
 This is free software: you are free to change and redistribute it.
 
