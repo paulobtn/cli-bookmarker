@@ -3,9 +3,9 @@ A very simple cli bookmarker made with bash script that allows fuzzy searching a
 assignment of custom launchers for custom URLs patterns. <br>
 
 Some things you can do with cli-bookmarker:
-* Share bookmarks across different protocols: http, gopher, gemini... each one opening with its respective browser
-* fuzzy search through your saved youtube videos and launch them with your music or video player
-* Use tags to organize your bookmarks
+* Share bookmarks across different protocols, each one opening with its respective browser
+* fuzzy search through saved videos and launch them with your music or video player
+* Use tags to organize bookmarks
 
 ## Installation
 put the bm file somewhere you can launch such as $HOME/.local/bin: 
@@ -81,7 +81,6 @@ gemini:// amfora
 this works by matching the url the user intends to launch with every
 entry in \[urls\], the last one that matches will define the launcher.
 
-
 ## Examples
 
 add a bookmark
@@ -155,7 +154,7 @@ bm -e
 * Import favorites from browser
 * Make it POSIX compliant
 * Still needs some clean up and optimizations
-* Add more customization
+* Add more customization in the config file
 
 ## License
 
