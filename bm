@@ -1,5 +1,4 @@
-#!/bin/bash
-#echo "val1|val2|val3|val4" | awk -F$'|' '{print $3}'
+#!/bin/sh
 # Defaults settings
 CONFIG_DIR="$HOME/.config/cli-bookmarker/"
 BM_LAUNCHER=xdg-open #default application to launch URLs
@@ -9,18 +8,14 @@ CONFIG_FILE="$HOME/.config/cli-bookmarker/bmrc"
 
 #Helper Functions
 
-# join string
-join_by() { join_by_d=${1-} join_by_f=${2-}; if shift 2; then printf %s "$join_by_f" "${@/#/$join_by_d}"; fi; }
-
 # trim string
 trim() { 
     sed -e 's/^[[:space:]]*//'
 }
 # beautiful print of bookmarks file
-bm_print() { 
-    bm_print_f=$1
-    # cat -n $bm_print_f | column -t -s $'\t'
-    cat -n $bm_print_f 
+bm_display() { 
+    bm_display_f="$1"
+    cat -n $bm_display_f 
 }
 
 # output configuration file
@@ -138,32 +133,36 @@ EOF
 
 # should receive the URL that will be launched and the URLS array from the configuration file
 # it returns the launcher associated with the last URL that matches with the URLS array
+# the url array is a string with the lines bellow the [url] tag in the configuration file
+# "$line1|$line2..."
 get_launcher() {
-    # URL we want to launch
-    GL_LAUNCH_URL=$1
-    # URLs associated with diferent launchers in the config file
-    GL_URLS_ARR_N=$2[@]
-    GL_URLS_ARR=("${!GL_URLS_ARR_N}")
+    #URL we want to launch
+    GLA_LAUNCH_URL="$1"
+    #URLS associated with launchers in the config file
+    GLA_URLS_ARR="$2"
+    #How many URLs in the config file
+    GLA_URLS_ARR_S=0
+    [ ! -z "$GLA_URLS_ARR" ] && GLA_URLS_ARR_S=$((`echo "$GLA_URLS_ARR" | tr -cd '|' | wc -c`+1))
     #default launcher if no match occurs
-    GL_LAUNCHER=$BM_LAUNCHER
+    GLA_LAUNCHER=$BM_LAUNCHER
 
-    #check if there's a match in the URLS array
-    for i in "${GL_URLS_ARR[@]}"
-    do
-        GL_CURRENT_URL=`echo $i | awk '{print $1}'`
-        GL_CURRENT_APP=`echo $i | awk '{print $2}'`
-        if [ -n "`echo $GL_LAUNCH_URL | grep "$GL_CURRENT_URL"`" ]; then
-            GL_LAUNCHER=$GL_CURRENT_APP
+    # echo $GLA_URLS_ARR | awk -F$'|' '{print $3}'
+    #check if there's any match in the URLS array
+    for i in $(seq 1 $GLA_URLS_ARR_S); do
+        line=`echo $GLA_URLS_ARR | awk -F'|' -v var="$i" '{print $var}'`
+        GLA_CURR_URL=`echo "$line" | awk '{print $1}'` 
+        GLA_CURR_APP=`echo "$line" | awk '{print $2}'` 
+        if [ -n "`echo $GLA_LAUNCH_URL | grep "$GLA_CURR_URL"`" ]; then
+            GLA_LAUNCHER=$GLA_CURR_APP
         fi
     done
-    
-    echo $GL_LAUNCHER
+
+    echo $GLA_LAUNCHER
 }
 
 # Parsing the configuration file
 # These arrays represent the lines of each section of bmrc
-GENERAL=()
-URLS=()
+URLS_CONFIG=""
 
 if test -f "$CONFIG_FILE"; then 
   #Config file exists: Parse it and assign new defaults
@@ -175,8 +174,7 @@ if test -f "$CONFIG_FILE"; then
       elif [ "$line" = "[urls]" ]; then CURR="urls"
       else
         case $CURR in
-            # "general") GENERAL+=("$line") ;;
-            "urls") URLS+=("$line") ;;
+            "urls") URLS_CONFIG="$URLS_CONFIG$line|" ;;
             "general") 
                 #assign new default configurations
                 gc=`echo $line | awk '{print $1}'`
@@ -185,10 +183,8 @@ if test -f "$CONFIG_FILE"; then
                     "bmfile") BM_DB=$gs ;;
                     "editor") BM_EDITOR=$gs ;;
                     "browser") BM_LAUNCHER=$gs ;;
-                    *)
-                        echo "invalid configuration file"
-                    ;;
-                 esac
+                    *) echo "invalid configuration file" ;;
+                esac
             ;;           
             *) ;;
         esac
@@ -196,9 +192,7 @@ if test -f "$CONFIG_FILE"; then
    done <<EOF
 $(sed 's/#.*$//;/^$/d' $CONFIG_FILE)
 EOF
-    # echo ${GENERAL[@]}
-    # echo ${URLS[@]}
-
+    URLS_CONFIG=`echo $URLS_CONFIG | sed 's/.$//' | trim`
 else
     echo "Configuration file not found. You can create one with bm --create-config"
 fi
@@ -206,30 +200,29 @@ fi
 #Main logic
 case $1 in
     "-l") 
-        #list bookmarks
+
+        # bm -l list the bookmarks
+
         if [ -z "$2" ]; then 
             # no tag was given: list all
-            # cat -n ${BM_DB} | awk '{ $3 = "\t" $3; print}' | column -t -s $'\t'
-            bm_print ${BM_DB} | column -t -s $'\t'
+            bm_display ${BM_DB} | column -t -s "$(printf '\t')"
         else
             # tag was given: list only entries that match
-             bm_print ${BM_DB} | grep "\[.*$2.*\]"
+             bm_display ${BM_DB} | grep "\[.*$2.*\]"
         fi   
         ;;
     "-r") 
-        ARR=()
         RMSTR=""
         #remove bookmark if id is provided
         if [ ! -z "$2" ]; then        
-            # add lines that will be deleted to an array           
-            while (( "$#-1" )); do
-                # ARR+=($2d)
-                RMSTR="$RMSTR $2d"
-                shift 
+            # add lines that will be deleted to a string           
+            while [ "$#" -gt "0" ]; do
+                [ -n "$2" ] && RMSTR="$RMSTR $2d"
+                shift
             done
         else
             # user can select multiple entries. This returns the ids list that will be used by sed, example: [3d 5d 7d]
-            RMSTR=`bm_print ${BM_DB} | fzf -m --delimiter=$'\t' --preview-window right:45%:wrap --preview='printf "Title: %b\n\nTags: %b\n\nUrl: %b\n\n" {2} {3} {4}' | awk '{print $1"d"}'`
+            RMSTR=`bm_display ${BM_DB} | fzf -m --delimiter="$(printf '\t')" --preview-window right:45%:wrap --preview='printf "Title: %b\n\nTags: %b\n\nUrl: %b\n\n" {2} {3} {4}' | awk '{print $1"d"}'`
         fi
         #delete the lines
         if [ ! -z "$RMSTR" ]; then
@@ -237,41 +230,39 @@ case $1 in
         fi
         ;;
     "-o"|"") 
+
         # bm -o and bm open search prompt
         # bm -o <url> launch a website
         # bm -o <id> launch website from bookmark
+
         #open bookmark or URL
         if [ -z "$2" ]; then 
             # id not provided: open search prompt
-            LINE=`bm_print ${BM_DB} | fzf --delimiter=$'\t' --preview-window right:45%:wrap --preview='printf "Title: %b\n\nTags: %b\n\nUrl: %b\n\n" {2} {3} {4}'`             
+            LINE=`bm_display ${BM_DB} | fzf --delimiter="$(printf '\t')" --preview-window right:45%:wrap --preview='printf "Title: %b\n\nTags: %b\n\nUrl: %b\n\n" {2} {3} {4}'`             
             if [ ! -z "$LINE" ]; then 
-                # URL=`echo $LINE | awk '{print $2}'`
                 URL=`echo $LINE | awk '{print $NF}'`
             fi
         else
             #argument was provided
-            re='^[0-9]+$'
-            if ! [[ $2 =~ $re ]] ; then
+            if [ -z "`echo "$2" | grep '^[0-9]\+$'`" ]; then
                 # not a number, assume it's a url
-                URL=$2
+                URL="$2"
             else 
                 #it's a number: just take the URL from the line number provided
                 URL=`sed -n $2p ${BM_DB} | awk '{print $NF}'`
             fi
-
-            
         fi
-        [ ! -z "$URL" ] && $(get_launcher $URL "URLS") $URL;
+        [ ! -z "$URL" ] && $(get_launcher "$URL" "$URLS_CONFIG") $URL;
         ;;
     "-t")
         # open with tag search
         if [ ! -z "$2" ]; then 
             # tag is provided, open search
-            LINE=`bm_print ${BM_DB} | grep "\[.*$2.*]" | fzf --delimiter=$'\t' --preview-window right:45%:wrap --preview='printf "Title: %b\n\nTags: %b\n\nUrl: %b\n\n" {2} {3} {4}'`
+            LINE=`bm_display ${BM_DB} | grep "\[.*$2.*]" | fzf --delimiter="$(printf '\t')" --preview-window right:45%:wrap --preview='printf "Title: %b\n\nTags: %b\n\nUrl: %b\n\n" {2} {3} {4}'`
             if [ ! -z "$LINE" ]; then 
                 # open the selected url
                 URL=`echo $LINE | awk '{print $NF}'`
-                [ ! -z "$URL" ] && $(get_launcher $URL "URLS") $URL;
+                [ ! -z "$URL" ] && $(get_launcher "$URL" "$URLS_CONFIG") $URL;
             fi
         else
             # tag not provided, list all tags
@@ -283,12 +274,8 @@ case $1 in
         #edit with text editor
         ${BM_EDITOR} ${BM_DB}
         ;;
-    "-h"|"--help")
-        output_help
-        ;;
-    "-v"|"--version")
-        output_version
-        ;;
+    "-h"|"--help") output_help ;;
+    "-v"|"--version") output_version ;;
     "--create-config")
         [ ! -d "$CONFIG_DIR" ] && mkdir -p "$CONFIG_DIR"
         output_config > "$CONFIG_DIR/bmrc"
@@ -300,21 +287,21 @@ case $1 in
         else
             #bm [url] [description]? [tags]? should add a bookmark
             SITE=$1
-            TAGSSTR=""
+            TAGS=""
             DESCR=""
             # check if there's description
             if [ ! -z "$2" ]; then
                 DESCR="$2"
                 #check if there's tags
                 if [ ! -z "$3" ]; then 
-                    while (( "$#" )); do
-                        TAGSSTR="$TAGSSTR $3"
+                    while [ "$#" -gt "0" ]; do
+                        TAGS="$TAGS $3"
                         shift 
                     done
-                    TAGSSTR="[ `echo $TAGSSTR | trim` ]"
+                    TAGS="[ `echo $TAGS | trim` ]"
                 fi   
             fi
-            echo -e "$DESCR\t$TAGSSTR\t$SITE" >> ${BM_DB}
+            printf "$DESCR\t$TAGS\t$SITE\n" >> ${BM_DB}
         fi
         ;;
 esac
