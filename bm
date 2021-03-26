@@ -175,8 +175,21 @@ if test -f "$CONFIG_FILE"; then
       elif [ "$line" = "[urls]" ]; then CURR="urls"
       else
         case $CURR in
-            "general") GENERAL+=("$line") ;;
+            # "general") GENERAL+=("$line") ;;
             "urls") URLS+=("$line") ;;
+            "general") 
+                #assign new default configurations
+                gc=`echo $line | awk '{print $1}'`
+                gs=`echo $line | awk '{print $2}'`
+                case $gc in
+                    "bmfile") BM_DB=$gs ;;
+                    "editor") BM_EDITOR=$gs ;;
+                    "browser") BM_LAUNCHER=$gs ;;
+                    *)
+                        echo "invalid configuration file"
+                    ;;
+                 esac
+            ;;           
             *) ;;
         esac
       fi
@@ -186,26 +199,6 @@ EOF
     # echo ${GENERAL[@]}
     # echo ${URLS[@]}
 
-    # assign new config defaults
-    for i in "${GENERAL[@]}"
-    do
-        gc=`echo $i | awk '{print $1}'`
-        gs=`echo $i | awk '{print $2}'`
-        case $gc in
-            "bmfile")
-                BM_DB=$gs
-            ;;
-            "editor")
-                BM_EDITOR=$gs
-            ;;
-            "browser")
-                BM_LAUNCHER=$gs
-            ;;
-            *)
-                echo "invalid configuration"
-            ;;
-        esac
-    done;
 else
     echo "Configuration file not found. You can create one with bm --create-config"
 fi
