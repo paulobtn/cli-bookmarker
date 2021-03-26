@@ -19,9 +19,9 @@ To launch as simply "bm" you should add $HOME/.local/bin to your path:
 export PATH="$HOME/.local/bin:$PATH"
 ```
 
-### Tools Required
-* fzf
-* software from gnu core utils like cat, sed, awk, echo, column... normally they are installed by default in your distribution
+### Dependencies
+* [fzf](https://github.com/junegunn/fzf) - a fuzzy search finder
+* software from gnu core utils like cat, sed, awk, echo, column... they are usually installed by default in your distribution
 
 ## Usage
 ```
