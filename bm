@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#echo "val1|val2|val3|val4" | awk -F$'|' '{print $3}'
 # Defaults settings
 CONFIG_DIR="$HOME/.config/cli-bookmarker/"
 BM_LAUNCHER=xdg-open #default application to launch URLs
@@ -218,22 +218,23 @@ case $1 in
         ;;
     "-r") 
         ARR=()
+        RMSTR=""
         #remove bookmark if id is provided
         if [ ! -z "$2" ]; then        
             # add lines that will be deleted to an array           
             while (( "$#-1" )); do
-                ARR+=($2d)
+                # ARR+=($2d)
+                RMSTR="$RMSTR $2d"
                 shift 
             done
         else
             # user can select multiple entries. This returns the ids list that will be used by sed, example: [3d 5d 7d]
-            # ARR=(`cat -n ./bookmarks | fzf -m | awk '{print $1"d"}' | xargs echo`)
-            ARR=(`bm_print ${BM_DB} | fzf -m --delimiter=$'\t' --preview-window right:45%:wrap --preview='printf "Title: %b\n\nTags: %b\n\nUrl: %b\n\n" {2} {3} {4}' | awk '{print $1"d"}' | xargs echo`)
+            RMSTR=`bm_print ${BM_DB} | fzf -m --delimiter=$'\t' --preview-window right:45%:wrap --preview='printf "Title: %b\n\nTags: %b\n\nUrl: %b\n\n" {2} {3} {4}' | awk '{print $1"d"}'`
         fi
         #delete the lines
-        if [ ${#ARR[@]} -ne "0" ]; then
-            sed -i.bak `join_by ";" $(printf '%s\n' "${ARR[*]}")` ${BM_DB} 
-        fi       
+        if [ ! -z "$RMSTR" ]; then
+            sed -i.bak "`echo $RMSTR | trim | sed 's/ /;/g'`" ${BM_DB} 
+        fi
         ;;
     "-o"|"") 
         # bm -o and bm open search prompt
