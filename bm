@@ -294,7 +294,7 @@ case $1 in
         echo "Configuration file created: $HOME/.config/cli-bookmarker/bmrc"
         ;;    
     *)
-        if [[ ${1:0:1} == "-" ]]; then
+        if [ -n "`echo "$1" | grep "^-"`" ]; then
             echo "invalid command. Use bm -h for help" >&2; exit 1
         else
             #bm [url] [description]? [tags]? should add a bookmark
