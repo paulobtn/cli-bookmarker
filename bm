@@ -299,24 +299,21 @@ case $1 in
         else
             #bm [url] [description]? [tags]? should add a bookmark
             SITE=$1
-            TAGS=()
             TAGSSTR=""
             DESCR=""
-
             # check if there's description
             if [ ! -z "$2" ]; then
                 DESCR="$2"
                 #check if there's tags
                 if [ ! -z "$3" ]; then 
                     while (( "$#" )); do
-                        TAGS+=($3)
+                        TAGSSTR="$TAGSSTR $3"
                         shift 
                     done
-                    TAGSSTR=`printf '[%s] ' "${TAGS[*]}"`
+                    TAGSSTR="[ `echo $TAGSSTR | trim` ]"
                 fi   
-
             fi
-            echo -e "$DESCR\t$TAGSSTR\t$SITE" >> ${BM_DB}   
+            echo -e "$DESCR\t$TAGSSTR\t$SITE" >> ${BM_DB}
         fi
         ;;
 esac
