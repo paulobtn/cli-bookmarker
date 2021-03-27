@@ -127,7 +127,7 @@ Examples
     edit bookmark file
     bm -e
 
-More help at <https://github.com/paulonetodev/cli-bookmarker>
+More help at <https://github.com/paulobtn/cli-bookmarker>
 EOF
 }
 
