@@ -72,7 +72,7 @@ A simple configuration:
 ```bash
 [urls]
 # launch youtube videos with vlc
-youtube.com/watch vlc 
+youtube.com/watch mpv 
 # launch github with firefox
 github.com firefox
 # launch gemini's URLs in the terminal browser amfora
