@@ -301,7 +301,9 @@ case $1 in
                     TAGS="[ `echo $TAGS | trim` ]"
                 fi   
             fi
-            printf "$DESCR\t$TAGS\t$SITE\n" >> ${BM_DB}
+            [ -z "$DESCR" ] && DESCR="------"
+            [ -z "$TAGS" ] && TAGS="------"
+            printf '%s\t%s\t%s\n' "$DESCR" "$TAGS" "$SITE" >> ${BM_DB}
         fi
         ;;
 esac
