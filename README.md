@@ -39,8 +39,8 @@ bm [option] [url]
 -o, open bookmark if id is specified, open URL if a url is specified or, search with fzf if no argument was given
 -e, edit with default text editor
 -t, list all tags if no argument is provided or fuzzy search of entries with a provided tag
--h,--help show help
--v,--version show version
+-h,--help, show help
+-v,--version, show version
 ```
 
 ## Configuration
