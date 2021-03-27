@@ -7,7 +7,7 @@ Some things you can do with cli-bookmarker:
 * fuzzy search through saved videos and launch them with your music or video player
 * Use tags to organize bookmarks
 
-## Installation
+## Install
 put the bm file somewhere you can launch such as $HOME/.local/bin: 
 ```
 ([ -d "$HOME/.local/bin" ] || mkdir -p "$HOME/.local/bin") && \
