@@ -153,8 +153,6 @@ bm -e
 
 * Import favorites from browser
 * Add more customizations in the config file
-* fix characters \[\] in the description breaking the tags system
-* fix bug where url shows in the tags field during the fzf preview if there are no tags
 
 ## License
 
