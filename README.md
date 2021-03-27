@@ -153,6 +153,7 @@ bm -e
 
 * Import favorites from browser
 * Add more customizations in the config file
+* fix characters \[\] in the description breaking the tags system
 
 ## License
 
