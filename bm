@@ -208,7 +208,7 @@ case $1 in
             bm_display ${BM_DB} | column -t -s "$(printf '\t')"
         else
             # tag was given: list only entries that match
-             bm_display ${BM_DB} | grep "\[.*$2.*\]"
+             bm_display ${BM_DB} | grep "\t.*$2.*\t"
         fi   
         ;;
     "-r") 
@@ -258,7 +258,7 @@ case $1 in
         # open with tag search
         if [ ! -z "$2" ]; then 
             # tag is provided, open search
-            LINE=`bm_display ${BM_DB} | grep -P "\t\[.*$2.*]" | fzf --delimiter="$(printf '\t')" --preview-window right:45%:wrap --preview='printf "Title: %b\n\nTags: %b\n\nUrl: %b\n\n" {2} {3} {4}'`
+            LINE=`bm_display ${BM_DB} | grep -P "\t.*$2.*\t" | fzf --delimiter="$(printf '\t')" --preview-window right:45%:wrap --preview='printf "Title: %b\n\nTags: %b\n\nUrl: %b\n\n" {2} {3} {4}'`
             if [ ! -z "$LINE" ]; then 
                 # open the selected url
                 URL=`echo $LINE | awk '{print $NF}'`
@@ -266,7 +266,7 @@ case $1 in
             fi
         else
             # tag not provided, list all tags
-            all_tags=`grep -oP '\t\[\K[^]]*' ${BM_DB}`
+            all_tags=`awk -F"$(printf '\t')" '{print $2}' "${BM_DB}" | trim`
             echo $all_tags | tr ' ' '\n' | sort -u
         fi
         ;;
@@ -298,11 +298,11 @@ case $1 in
                         TAGS="$TAGS $3"
                         shift 
                     done
-                    TAGS="[ `echo $TAGS | trim` ]"
+                    TAGS="`echo $TAGS | trim`"
                 fi   
             fi
-            [ -z "$DESCR" ] && DESCR="------"
-            [ -z "$TAGS" ] && TAGS="------"
+            [ -z "$DESCR" ] && DESCR="-"
+            [ -z "$TAGS" ] && TAGS="-"
             printf '%s\t%s\t%s\n' "$DESCR" "$TAGS" "$SITE" >> ${BM_DB}
         fi
         ;;
