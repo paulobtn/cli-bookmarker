@@ -144,7 +144,7 @@ fzf search filtered by tags
 bm -t music
 ```
 
-edit with default text editor
+edit bookmarks file with default text editor
 ```
 bm -e
 ```
